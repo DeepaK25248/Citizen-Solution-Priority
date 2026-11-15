@@ -1,0 +1,8 @@
+.env
+/citysolution.db
+/citysolution_presentation.db
+/laptop_complaints_migration.xlsx
+/static/uploads/*
+!/static/uploads/.gitkeep
+__pycache__/
+.venv/

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Import Sample Complaints &mdash; Citizen Solution Priority{% endblock %}
+
+{% block content %}
+<section class="block">
+  <div class="wrap" style="max-width:720px;">
+    <div class="section-head">
+      <div>
+        <span class="eyebrow">Authority Desk</span>
+        <h1>Import Sample Complaints</h1>
+        <p>Replace the original generated demo batch with workbook rows, while preserving citizen complaints.</p>
+      </div>
+    </div>
+    <div class="card" style="padding:24px;">
+      <p>Every imported row is marked as sample data. Workbook citizen names and email addresses are not published or used for notifications. Only the original generated batch with IDs beginning <code>citysolution-demo-</code> is removed; citizen reports and previously imported workbook rows are preserved.</p>
+      <p>The site-wide sample-data notice must remain enabled while these records are publicly visible.</p>
+      <form method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <div class="form-group">
+          <label for="workbook">Complaint workbook (.xlsx)</label>
+          <input id="workbook" name="workbook" type="file" accept=".xlsx" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Add labeled sample complaints</button>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}

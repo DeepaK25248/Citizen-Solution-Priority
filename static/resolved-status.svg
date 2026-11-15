@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 420" role="img" aria-labelledby="title description">
+  <title id="title">Complaint resolved</title>
+  <desc id="description">A completed civic repair marked with a green check.</desc>
+  <rect width="960" height="420" fill="#EAF3F1"/>
+  <circle cx="785" cy="85" r="42" fill="#E3A93C"/>
+  <path d="M0 255 150 188l142 62 132-102 174 110 150-72 212 74v160H0Z" fill="#C8E0D8"/>
+  <path d="M0 307h960v113H0Z" fill="#D3D9D0"/>
+  <path d="M0 355h960" stroke="#fff" stroke-width="7" stroke-dasharray="34 28"/>
+  <rect x="92" y="166" width="114" height="141" rx="4" fill="#1F7A72"/>
+  <rect x="112" y="188" width="21" height="25" fill="#EAF3F1"/>
+  <rect x="155" y="188" width="21" height="25" fill="#EAF3F1"/>
+  <rect x="112" y="232" width="21" height="25" fill="#EAF3F1"/>
+  <rect x="155" y="232" width="21" height="25" fill="#EAF3F1"/>
+  <rect x="250" y="208" width="105" height="99" rx="4" fill="#C1443C"/>
+  <path d="m250 208 52-43 53 43" fill="#A53833"/>
+  <circle cx="602" cy="207" r="111" fill="#fff"/>
+  <circle cx="602" cy="207" r="91" fill="#1F7A72"/>
+  <path d="m557 207 31 32 61-67" fill="none" stroke="#fff" stroke-width="17" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="480" y="385" fill="#12233A" font-family="Arial, sans-serif" font-size="27" font-weight="700" text-anchor="middle">ISSUE RESOLVED</text>
+</svg>

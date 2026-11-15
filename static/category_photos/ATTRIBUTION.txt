@@ -1,0 +1,53 @@
+Representative category photos for demo complaints
+
+These are illustrative class examples, not photos submitted by the citizens
+who filed the individual complaints. Files are stored locally in this folder.
+
+Road Maintenance: Potholes in Bengaluru road.jpg
+Author: Mallikarjunasj. License: CC0 1.0.
+https://commons.wikimedia.org/wiki/File:Potholes_in_Bengaluru_road.jpg
+https://creativecommons.org/publicdomain/zero/1.0/
+
+Storm Water Drain: Not even the wether would stop Urban Drainage Cleanup in Kampala.jpg
+Author: Jameswasswa. License: CC BY-SA 4.0.
+https://commons.wikimedia.org/wiki/File:Not_even_the_wether_would_stop_Urban_Drainage_Cleanup_in_Kampala.jpg
+https://creativecommons.org/licenses/by-sa/4.0/
+
+Solid Waste: Garbage dump in Karachi.jpg
+Author: Kskhh. License: CC BY-SA 4.0.
+https://commons.wikimedia.org/wiki/File:Garbage_dump_in_Karachi.jpg
+https://creativecommons.org/licenses/by-sa/4.0/
+
+Street Light / Electrical: Broken Street Light Stevenage (The White Way Lamppost 26).jpg
+Author: Andy. License: CC BY-SA 2.0.
+https://commons.wikimedia.org/wiki/File:Broken_Street_Light_Stevenage_(The_White_Way_Lamppost_26)_-_geograph.org.uk_-_8268947.jpg
+https://creativecommons.org/licenses/by-sa/2.0/
+
+Water Supply: Leak in rusted pipe side view.jpg
+Author: Shamrock Lee. License: CC BY 4.0.
+https://commons.wikimedia.org/wiki/File:Leak_in_rusted_pipe_side_view.jpg
+https://creativecommons.org/licenses/by/4.0/
+
+Sewage / Sanitation: Sewage leakage.jpg
+Author: Capankajsmilyo. License: CC BY-SA 4.0.
+https://commons.wikimedia.org/wiki/File:Sewage_leakage.jpg
+https://creativecommons.org/licenses/by-sa/4.0/
+
+Stray Animals: Street dog at the India Gate.jpg
+Author: grabka dot org. License: CC BY 2.0.
+https://commons.wikimedia.org/wiki/File:Street_dog_at_the_India_Gate.jpg
+https://creativecommons.org/licenses/by/2.0/
+
+Parks & Trees: A Fallen Tree in Kulupwadi Rd, Borivali.jpg
+Author: Rakesh from Bangalore. License: CC BY-SA 2.0.
+https://commons.wikimedia.org/wiki/File:A_Fallen_Tree_in_Kulupwadi_Rd,_Borivali_(35520292).jpg
+https://creativecommons.org/licenses/by-sa/2.0/
+
+Encroachment: Street vendors in Karnataka.jpg
+Author: Shagil Kannur. License: CC BY-SA 4.0.
+https://commons.wikimedia.org/wiki/File:Street_vendors_in_Karnataka.jpg
+https://creativecommons.org/licenses/by-sa/4.0/
+
+Others: FEMA - 34469 - Damaged bridge in Missouri.jpg
+Author: Jocelyn Augustino / FEMA. License: Public domain (U.S. federal work).
+https://commons.wikimedia.org/wiki/File:FEMA_-_34469_-_Damaged_bridge_in_Missouri.jpg

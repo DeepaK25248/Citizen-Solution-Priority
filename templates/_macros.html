@@ -1,0 +1,189 @@
+{#
+  Shared complaint-rendering macros for Citizen Solution Priority.
+#}
+
+{% macro dash_card(c, next_url) %}
+{% set eff = effective_priority(c['priority'], c['upvotes'], c['priority_locked']) %}
+<article class="dash-card priority-{{ eff }} complaint-card" data-complaint-id="{{ c['id'] }}" data-status="{{ c['status'] }}" data-priority="{{ eff }}" data-category="{{ c['category'] }}" data-city="{{ c['city'] or '' }}">
+  <!-- Card Header: ID & Badges -->
+  <div class="complaint-card-header">
+    <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+      <span class="row-id">#{{ '%04d'|format(c['id']) }}</span>
+      {% if c['is_demo'] and not config.get('CITYSOLUTION_PRESENTATION_MODE') %}<span class="badge badge-demo">DEMO - NOT A REAL REPORT</span>{% endif %}
+      <span class="badge badge-priority-{{ eff }}">{{ eff }} Priority</span>
+      {% if c['priority_locked'] %}
+      <span class="badge badge-locked" title="Priority locked by authority">&#128274; Locked</span>
+      {% elif c['priority'] != eff %}
+      <span class="badge badge-priority-{{ eff }}">&uarr; Escalated</span>
+      {% endif %}
+      {% if c['is_fake'] %}
+      <span class="badge badge-fake">Flagged Fake</span>
+      {% endif %}
+    </div>
+    <span class="badge badge-status-{{ c['status'] }}">{{ 'In Progress' if c['status'] == 'Processing' else 'Resolved' if c['status'] == 'Solved' else c['status'] }}</span>
+  </div>
+
+  <!-- Category & Description -->
+  <div class="complaint-card-body">
+    <a href="{{ url_for('complaint_detail', complaint_id=c['id']) }}" style="text-decoration:none; color:inherit; display:block;">
+      <h2 class="complaint-card-title">{{ category_icons.get(c['category'], '📋') }} {{ c['category'] }}</h2>
+      {% if c['description'] %}
+      <p class="complaint-card-desc">{{ c['description'][:140] }}{% if c['description']|length > 140 %}&hellip;{% endif %}</p>
+      {% endif %}
+    </a>
+  </div>
+
+  <!-- Photo Evidence (if uploaded) -->
+  {% if c['image_path'] %}
+  <a href="{{ url_for('complaint_detail', complaint_id=c['id']) }}" style="display:block;">
+    <img class="complaint-card-thumb" src="{{ c['image_path']|complaint_image_url }}" alt="Complaint photo" loading="lazy">
+  </a>
+  {% endif %}
+
+  <!-- Location & Metadata -->
+  <div class="complaint-card-meta">
+    <span>📍 {{ c['city'] or 'Bengaluru' }}{% if c['location'] %} &bull; {{ c['location'] }}{% endif %}</span>
+    <span>📅 {{ c['created_at'][:10] if c['created_at']|length >= 10 else c['created_at'] }}</span>
+    {% if c['citizen_name'] %}<span>👤 {{ c['citizen_name'] }}</span>{% endif %}
+    <span>👍 {{ c['upvotes'] }} upvotes</span>
+    {% if c['latitude'] is not none and c['longitude'] is not none %}
+    <span><a href="https://www.openstreetmap.org/?mlat={{ c['latitude'] }}&amp;mlon={{ c['longitude'] }}#map=18/{{ c['latitude'] }}/{{ c['longitude'] }}" target="_blank" rel="noopener" style="color:var(--primary);">🗺️ Map</a></span>
+    {% endif %}
+  </div>
+
+  <!-- Action Bar -->
+  <div class="complaint-card-footer">
+    <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+      <a href="{{ url_for('complaint_detail', complaint_id=c['id']) }}" class="btn btn-small btn-primary">
+        View Details &rarr;
+      </a>
+      <button type="button" class="btn btn-small btn-ghost toggle-triage-btn" onclick="var el=document.getElementById('triage-{{ c['id'] }}'); el.style.display=(el.style.display==='none'||!el.style.display)?'block':'none';" title="Toggle inline triage tools">
+        ⚡ Quick Triage
+      </button>
+    </div>
+
+    {% if c['status'] == 'Solved' %}
+    <div style="display:flex; align-items:center; gap:8px;">
+      {% if c['citizen_email'] %}
+      <form method="POST" action="{{ url_for('api_send_complaint_email', complaint_id=c['id']) }}" class="dash-card-email" data-complaint-id="{{ c['id'] }}" style="display:inline-block;">
+        <button type="submit" class="btn btn-small btn-ghost" data-email-sent="{{ 'true' if c['email_sent'] else 'false' }}" style="padding:4px 10px; font-size:0.75rem;">
+          {% if c['email_sent'] %}✓ Email Sent{% else %}✉️ Send Email{% endif %}
+        </button>
+      </form>
+      {% endif %}
+      <span class="badge badge-status-Solved dash-card-email-feedback" role="status" aria-live="polite" {% if not c['email_sent'] %}hidden{% endif %}>
+        {% if c['email_sent'] %}Delivered ✓{% endif %}
+      </span>
+      <form method="POST" action="{{ url_for('delete_complaint', complaint_id=c['id']) }}" class="dash-card-delete" style="display:inline-block;" onsubmit="return confirm('Permanently delete solved complaint #{{ '%04d'|format(c['id']) }}?');">
+        <input type="hidden" name="next" value="{{ next_url }}">
+        <button type="submit" class="btn btn-small btn-danger" style="padding:4px 8px; font-size:0.75rem;" title="Delete">&#128465;</button>
+      </form>
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- Collapsible Authority Actions Triage Form -->
+  <form id="triage-{{ c['id'] }}" method="POST" action="{{ url_for('update_complaint', complaint_id=c['id']) }}" class="dash-card-actions" style="display:none; background:var(--bg-subtle); border-radius:var(--radius-md); padding:12px; margin-top:12px; border:1px solid var(--border-light);">
+    <div style="display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin-bottom:8px;">
+      <select name="priority" title="Set priority" style="font-size:0.8rem; padding:4px 8px; min-height:34px;">
+        {% for p in PRIORITIES %}
+        <option value="{{ p }}" {% if c['priority']==p %}selected{% endif %}>Priority: {{ p }}</option>
+        {% endfor %}
+      </select>
+
+      <select name="status" title="Set status" style="font-size:0.8rem; padding:4px 8px; min-height:34px;">
+        {% for s in STATUSES %}
+        <option value="{{ s }}" {% if c['status']==s %}selected{% endif %}>Status: {{ s }}</option>
+        {% endfor %}
+      </select>
+
+      <select name="category" title="Change category" style="font-size:0.8rem; padding:4px 8px; min-height:34px;">
+        {% for cat in ALL_CATEGORIES %}
+        <option value="{{ cat }}" {% if c['category']==cat %}selected{% endif %}>{{ cat }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="flag-group" style="display:flex; flex-wrap:wrap; gap:12px; margin:6px 0 10px; font-size:0.82rem;">
+      <label title="Prevents upvotes from overriding assigned priority">
+        <input type="checkbox" name="priority_locked" {% if c['priority_locked'] %}checked{% endif %}> Lock Priority
+      </label>
+      <label>
+        <input type="checkbox" name="is_fake" {% if c['is_fake'] %}checked{% endif %}> Flag Fake
+      </label>
+    </div>
+
+    <div style="display:flex; justify-content:flex-end; gap:8px;">
+      <button type="button" class="btn btn-small btn-ghost" onclick="document.getElementById('triage-{{ c['id'] }}').style.display='none';">Cancel</button>
+      <button type="submit" class="btn btn-small btn-primary">Save Changes</button>
+    </div>
+  </form>
+</article>
+{% endmacro %}
+
+
+{% macro complaint_row(c) %}
+{% set eff = effective_priority(c['priority'], c['upvotes'], c['priority_locked']) %}
+<article class="complaint-card" data-complaint-id="{{ c['id'] }}" data-status="{{ c['status'] }}" data-priority="{{ eff }}" data-category="{{ c['category'] }}" data-city="{{ c['city'] or '' }}" data-search="{{ [c['id'], '%04d'|format(c['id']), c['category'], c['city'] or '', c['location'] or '', c['description'] or '', c['citizen_name'] or '']|join(' ')|lower }}">
+  <!-- Card Header: ID & Status Badges -->
+  <div class="complaint-card-header">
+    <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+      <span class="row-id">#{{ '%04d'|format(c['id']) }}</span>
+      {% if c['is_demo'] and not config.get('CITYSOLUTION_PRESENTATION_MODE') %}<span class="badge badge-demo">DEMO - NOT A REAL REPORT</span>{% endif %}
+      <span class="badge badge-priority-{{ eff }}">{{ eff }} Priority</span>
+      {% if c['priority_locked'] %}<span class="badge badge-locked" title="Priority locked">&#128274;</span>{% endif %}
+    </div>
+    <span class="badge badge-status-{{ c['status'] }}">{{ 'In Progress' if c['status'] == 'Processing' else 'Resolved' if c['status'] == 'Solved' else c['status'] }}</span>
+  </div>
+
+  <!-- Category & Description -->
+  <div class="complaint-card-body">
+    <a href="{{ url_for('complaint_detail', complaint_id=c['id']) }}" style="text-decoration:none; color:inherit; display:block;">
+      <h2 class="complaint-card-title">{{ category_icons.get(c['category'], '📋') }} {{ c['category'] }}</h2>
+      {% if c['description'] %}
+      <p class="complaint-card-desc">{{ c['description'][:140] }}{% if c['description']|length > 140 %}&hellip;{% endif %}</p>
+      {% endif %}
+    </a>
+  </div>
+
+  <!-- Evidence Photo -->
+  {% if c['image_path'] %}
+  <a href="{{ url_for('complaint_detail', complaint_id=c['id']) }}" style="display:block;">
+    <img src="{{ c['image_path']|complaint_image_url }}" alt="Evidence photo for complaint #{{ c['id'] }}" class="complaint-card-thumb" loading="lazy">
+  </a>
+  {% endif %}
+
+  <!-- Location & Metadata -->
+  <div class="complaint-card-meta">
+    <span>📍 {{ c['city'] or 'Bengaluru' }}{% if c['location'] %} &bull; {{ c['location'] }}{% endif %}</span>
+    <span>📅 {{ c['created_at'][:10] if c['created_at']|length >= 10 else c['created_at'] }}</span>
+    {% if c['citizen_name'] %}<span>👤 {{ c['citizen_name'] }}</span>{% endif %}
+  </div>
+
+  <!-- Card Footer -->
+  <div class="complaint-card-footer">
+    {% if not c['is_demo'] or config.get('CITYSOLUTION_PRESENTATION_MODE') %}
+    <form method="POST" action="{{ url_for('upvote_complaint', complaint_id=c['id']) }}" style="display:inline;">
+      <input type="hidden" name="next" value="{{ request.full_path }}">
+      <button type="submit" class="btn btn-small btn-ghost" title="Upvote this complaint">
+        👍 {{ c['upvotes'] }}
+      </button>
+    </form>
+    {% else %}
+    <span class="field-hint">Demo records cannot receive upvotes.</span>
+    {% endif %}
+    
+    <div style="display:flex; gap:8px; align-items:center;">
+      <a href="{{ url_for('complaint_detail', complaint_id=c['id']) }}" class="btn btn-small btn-primary">
+        View Details &rarr;
+      </a>
+      {% if c['status'] == 'Solved' and session.get('authority_authenticated') %}
+      <form method="POST" action="{{ url_for('delete_complaint', complaint_id=c['id']) }}" style="display:inline;" onsubmit="return confirm('Permanently delete complaint #{{ '%04d'|format(c['id']) }}?');">
+        <input type="hidden" name="next" value="{{ request.full_path }}">
+        <button type="submit" class="btn btn-small btn-danger" title="Delete">&#128465;</button>
+      </form>
+      {% endif %}
+    </div>
+  </div>
+</article>
+{% endmacro %}

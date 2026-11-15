@@ -1,0 +1,238 @@
+{% extends "base.html" %}
+{% from "_macros.html" import complaint_row %}
+{% block title %}All Complaints &mdash; Citizen Solution Priority{% endblock %}
+
+{% block content %}
+<section class="block">
+  <div class="wrap" style="max-width: 760px; margin: 0 auto;">
+    
+    <!-- Top Header -->
+    <div class="section-head">
+      <div>
+        <span class="eyebrow">Municipal Complaint Registry</span>
+        <h1 style="font-size: 1.6rem; margin-bottom: 4px;">All Complaints</h1>
+        <p style="font-size: 0.9rem; margin: 0;">{{ complaints|length }} complaints filed across Bengaluru, sorted by active priority.</p>
+      </div>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <a href="{{ url_for('submit') }}" class="btn btn-small btn-primary">
+          + File Complaint
+        </a>
+      </div>
+    </div>
+
+    <!-- Live New Complaint Banner -->
+    <div id="live-new-banner" class="card" style="display:none; background:#EFF6FF; border-color:#BFDBFE; padding:12px 16px; margin-bottom:16px;" data-count="0">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <span style="font-size:0.88rem; font-weight:600; color:#1D4ED8;">
+          📢 <span data-new-count>0</span> new complaint(s) filed.
+        </span>
+        <button type="button" class="btn btn-small btn-primary" onclick="window.location.reload()">
+          Refresh
+        </button>
+      </div>
+    </div>
+
+    <!-- Search & Filter Controls -->
+    <div class="card" style="padding:16px; margin-bottom:16px;">
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        <!-- Search Input -->
+        <div class="input-with-icon">
+          <span class="input-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          </span>
+          <input id="complaints-search" type="search" placeholder="Search by ID (e.g. #0518), category, area, keyword..." autocomplete="off">
+        </div>
+
+        <!-- Filter Chips / Pills -->
+        <div class="filter-chips" style="display:flex; gap:6px; flex-wrap:wrap;">
+          <button type="button" class="filter-chip active" data-status-filter="">All ({{ complaints|length }})</button>
+          <button type="button" class="filter-chip" data-status-filter="Pending">Pending</button>
+          <button type="button" class="filter-chip" data-status-filter="Processing">In Progress</button>
+          <button type="button" class="filter-chip" data-status-filter="Solved">Resolved</button>
+          <button type="button" class="filter-chip" data-priority-filter="High">High Priority</button>
+        </div>
+
+        <!-- Secondary Dropdowns (Category + Ward) -->
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <select id="complaints-category-filter" style="flex:1; min-width:140px; min-height:36px; padding:4px 10px; font-size:0.82rem;">
+            <option value="">All Categories</option>
+            {% for cat in ALL_CATEGORIES %}
+            <option value="{{ cat }}">{{ cat }}</option>
+            {% endfor %}
+          </select>
+
+          <select id="complaints-city-filter" style="flex:1; min-width:140px; min-height:36px; padding:4px 10px; font-size:0.82rem;">
+            <option value="">All Wards / Areas</option>
+            {% for city in cities %}
+            <option value="{{ city }}">{{ city }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Results Counter -->
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; padding:0 4px;">
+      <span id="results-count-text" style="font-size:0.82rem; color:var(--text-light); font-weight:500;">
+        Showing <span id="visible-count">0</span> of <span id="total-count">{{ complaints|length }}</span> complaints
+      </span>
+      <button type="button" id="reset-filters-btn" class="btn btn-small btn-ghost" style="display:none; padding:2px 8px; font-size:0.75rem;">
+        ✕ Clear Filters
+      </button>
+    </div>
+
+    <!-- Empty State -->
+    <div id="no-results-card" class="card" style="display:none; text-align:center; padding:36px 20px;">
+      <div style="font-size:2rem; margin-bottom:8px;">🔍</div>
+      <h2 style="font-size:1.1rem; margin-bottom:4px;">No complaints match your filters</h2>
+      <p style="font-size:0.85rem; color:var(--text-muted); margin:0;">Try adjusting your search keywords, status filter, or category.</p>
+    </div>
+
+    {% if not complaints %}
+    <div class="card" style="text-align:center; padding:40px 20px;">
+      <div style="font-size:2.5rem; margin-bottom:10px;">📋</div>
+      <h2 style="font-size:1.2rem; margin-bottom:4px;">No complaints filed yet</h2>
+      <p style="font-size:0.85rem; color:var(--text-muted); margin:0;">Grievances reported by citizens will appear here.</p>
+    </div>
+    {% endif %}
+
+    <!-- Complaints Cards Container -->
+    <div id="complaint-list" class="complaint-list">
+      {% for c in complaints %}
+      {{ complaint_row(c) }}
+      {% endfor %}
+    </div>
+
+    <!-- Load More Button for Mobile Performance -->
+    <div id="load-more-wrap" style="text-align:center; margin-top:20px; display:none;">
+      <button type="button" id="load-more-btn" class="btn btn-ghost" style="width:100%; max-width:300px; padding:10px 20px;">
+        Load More Complaints &darr;
+      </button>
+    </div>
+
+  </div>
+</section>
+
+<script>
+(function () {
+  var cards = Array.from(document.querySelectorAll('#complaint-list > .complaint-card'));
+  var searchInput = document.getElementById('complaints-search');
+  var catSelect = document.getElementById('complaints-category-filter');
+  var citySelect = document.getElementById('complaints-city-filter');
+  var chipButtons = Array.from(document.querySelectorAll('.filter-chip'));
+  var visibleCountEl = document.getElementById('visible-count');
+  var totalCountEl = document.getElementById('total-count');
+  var noResultsCard = document.getElementById('no-results-card');
+  var resetBtn = document.getElementById('reset-filters-btn');
+  var loadMoreWrap = document.getElementById('load-more-wrap');
+  var loadMoreBtn = document.getElementById('load-more-btn');
+
+  var currentStatus = '';
+  var currentPriority = '';
+  var PAGE_SIZE = 25;
+  var visibleLimit = PAGE_SIZE;
+
+  // Filter chips click
+  chipButtons.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      chipButtons.forEach(function (b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      currentStatus = btn.getAttribute('data-status-filter') || '';
+      currentPriority = btn.getAttribute('data-priority-filter') || '';
+      visibleLimit = PAGE_SIZE;
+      applyFilters();
+    });
+  });
+
+  function applyFilters() {
+    var query = (searchInput.value || '').trim().toLowerCase();
+    var selCat = (catSelect.value || '').toLowerCase();
+    var selCity = (citySelect.value || '').toLowerCase();
+    var matchedCards = [];
+
+    var hasActiveFilters = Boolean(query || currentStatus || currentPriority || selCat || selCity);
+    if (resetBtn) resetBtn.style.display = hasActiveFilters ? 'inline-block' : 'none';
+
+    cards.forEach(function (card) {
+      var searchData = card.getAttribute('data-search') || '';
+      var cardStatus = card.getAttribute('data-status') || '';
+      var cardPriority = card.getAttribute('data-priority') || '';
+      var cardCat = (card.getAttribute('data-category') || '').toLowerCase();
+      var cardCity = (card.getAttribute('data-city') || '').toLowerCase();
+
+      var matchQuery = !query || searchData.indexOf(query) !== -1;
+      var matchStatus = !currentStatus || cardStatus.toLowerCase() === currentStatus.toLowerCase();
+      var matchPriority = !currentPriority || cardPriority.toLowerCase() === currentPriority.toLowerCase();
+      var matchCat = !selCat || cardCat === selCat;
+      var matchCity = !selCity || cardCity === selCity;
+
+      if (matchQuery && matchStatus && matchPriority && matchCat && matchCity) {
+        matchedCards.push(card);
+      } else {
+        card.style.display = 'none';
+      }
+    });
+
+    // Render paginated slice
+    var count = matchedCards.length;
+    for (var i = 0; i < count; i++) {
+      matchedCards[i].style.display = (i < visibleLimit) ? '' : 'none';
+    }
+
+    if (visibleCountEl) visibleCountEl.textContent = Math.min(visibleLimit, count);
+    if (totalCountEl) totalCountEl.textContent = count;
+
+    if (noResultsCard) noResultsCard.style.display = (count === 0) ? 'block' : 'none';
+    if (loadMoreWrap) loadMoreWrap.style.display = (count > visibleLimit) ? 'block' : 'none';
+  }
+
+  if (loadMoreBtn) {
+    loadMoreBtn.addEventListener('click', function () {
+      visibleLimit += PAGE_SIZE;
+      applyFilters();
+    });
+  }
+
+  if (searchInput) searchInput.addEventListener('input', function () { visibleLimit = PAGE_SIZE; applyFilters(); });
+  if (catSelect) catSelect.addEventListener('change', function () { visibleLimit = PAGE_SIZE; applyFilters(); });
+  if (citySelect) citySelect.addEventListener('change', function () { visibleLimit = PAGE_SIZE; applyFilters(); });
+
+  if (resetBtn) {
+    resetBtn.addEventListener('click', function () {
+      if (searchInput) searchInput.value = '';
+      if (catSelect) catSelect.value = '';
+      if (citySelect) citySelect.value = '';
+      chipButtons.forEach(function (b) { b.classList.remove('active'); });
+      if (chipButtons[0]) chipButtons[0].classList.add('active');
+      currentStatus = '';
+      currentPriority = '';
+      visibleLimit = PAGE_SIZE;
+      applyFilters();
+    });
+  }
+
+  // Initial display run
+  applyFilters();
+})();
+
+window.onLiveEvent = function (data) {
+  if (data.type !== 'update' && data.type !== 'upvote') return;
+  var node = document.querySelector('.complaint-card[data-complaint-id="' + data.id + '"]');
+  if (!node) return;
+
+  fetch('/partials/complaint-row/' + data.id)
+    .then(function (r) { return r.ok ? r.text() : null; })
+    .then(function (html) {
+      if (!html) { node.remove(); return; }
+      var wrapper = document.createElement('div');
+      wrapper.innerHTML = html.trim();
+      var newNode = wrapper.firstElementChild;
+      if (!newNode) return;
+      newNode.classList.add('live-flash');
+      node.replaceWith(newNode);
+      setTimeout(function () { newNode.classList.remove('live-flash'); }, 900);
+    })
+    .catch(function () {});
+};
+</script>
+{% endblock %}

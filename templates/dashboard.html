@@ -1,0 +1,271 @@
+{% extends "base.html" %}
+{% from "_macros.html" import dash_card %}
+{% block title %}Authority Desk &mdash; Citizen Solution Priority{% endblock %}
+
+{% block content %}
+<section class="block">
+  <div class="wrap">
+    
+    <!-- Desk Header -->
+    <div class="section-head">
+      <div>
+        <span class="eyebrow">Municipal Response Console</span>
+        <h1 style="font-size: 1.6rem; margin-bottom: 4px;">Authority Desk</h1>
+        <p style="font-size: 0.9rem; margin: 0;">Zonal monitoring, triage, assignment, and resolution control center.</p>
+      </div>
+    </div>
+
+    {% if stats.total %}
+    <form method="POST" action="{{ url_for('clear_all_complaints') }}" class="card" style="margin-bottom:18px; border-color:#FCA5A5; background:#FEF2F2;">
+      <input type="hidden" name="csrf_token" value="{{ clear_complaints_csrf_token }}">
+      <strong style="color:#991B1B;">Delete all complaints</strong>
+      <p style="margin:6px 0 12px; color:#7F1D1D;">This permanently deletes every complaint, associated votes and uploaded evidence, then resets numbering so the next complaint starts at #1. Citizen accounts will remain.</p>
+      <label style="display:flex; align-items:flex-start; gap:8px; margin-bottom:12px;">
+        <input type="checkbox" name="confirm" value="yes" required style="margin-top:4px;">
+        <span>I understand this cannot be undone and want to delete all complaints.</span>
+      </label>
+      <button type="submit" class="btn btn-small" style="background:#B91C1C; color:#fff; border-color:#B91C1C;">Delete All Complaints</button>
+    </form>
+    {% endif %}
+
+    <!-- Live New Complaint Alert Banner -->
+    <div id="live-new-banner" class="card" style="display:none; background:#EFF6FF; border-color:#BFDBFE; padding:14px 18px; margin-bottom:18px;" data-count="0">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <span style="font-size:0.9rem; font-weight:600; color:#1D4ED8;">
+          📢 <span data-new-count>0</span> new complaint(s) reported in your jurisdiction.
+        </span>
+        <button type="button" class="btn btn-small btn-primary" onclick="window.location.reload()">
+          Refresh
+        </button>
+      </div>
+    </div>
+
+    <!-- Overview Stat Cards (Prompt Section 14: Total, Pending, In Progress, Resolved, Flagged as Fake) -->
+    <div class="dash-overview dash-overview-5">
+      <div class="overview-card">
+        <span class="overview-label">Total Complaints</span>
+        <span class="overview-num" data-stat="total">{{ stats.total }}</span>
+        <span style="font-size:0.75rem; color:var(--text-light);">All logged grievances</span>
+      </div>
+
+      <div class="overview-card accent-amber">
+        <span class="overview-label">Pending</span>
+        <span class="overview-num" data-stat="pending_count">{{ stats.pending_count }}</span>
+        <span style="font-size:0.75rem; color:var(--text-light);">Awaiting review</span>
+      </div>
+
+      <div class="overview-card accent-blue">
+        <span class="overview-label">In Progress</span>
+        <span class="overview-num" data-stat="processing_count">{{ stats.processing_count }}</span>
+        <span style="font-size:0.75rem; color:var(--text-light);">Field work ongoing</span>
+      </div>
+
+      <div class="overview-card accent-green">
+        <span class="overview-label">Resolved</span>
+        <span class="overview-num" data-stat="solved_count">{{ stats.solved_count }}</span>
+        <span style="font-size:0.75rem; color:var(--text-light);">Remediation verified</span>
+      </div>
+
+      <div class="overview-card accent-high">
+        <span class="overview-label">Flagged Fake</span>
+        <span class="overview-num" data-stat="fake_count">{{ stats.fake_count }}</span>
+        <span style="font-size:0.75rem; color:var(--text-light);">Spam &amp; duplicates</span>
+      </div>
+    </div>
+
+    <!-- Analytics Charts Grid -->
+    <div class="grid-3" style="margin-bottom: 24px;">
+      <div class="chart-wrap">
+        <h3 style="font-size:0.95rem; margin-bottom:12px;">Issues by Category</h3>
+        <canvas id="categoryChart" height="180"></canvas>
+      </div>
+      <div class="chart-wrap">
+        <h3 style="font-size:0.95rem; margin-bottom:12px;">Resolution Status</h3>
+        <canvas id="statusChart" height="180"></canvas>
+      </div>
+      <div class="chart-wrap">
+        <h3 style="font-size:0.95rem; margin-bottom:12px;">Priority Distribution</h3>
+        <canvas id="priorityChart" height="180"></canvas>
+      </div>
+    </div>
+
+    <!-- Filter & Sort Toolbar (Prompt Section 14) -->
+    <form class="filter-bar" method="GET" action="{{ url_for('dashboard') }}">
+      <span style="font-size:0.85rem; font-weight:700; color:var(--text-main); margin-right:4px;">🔍 Filter:</span>
+      
+      <select name="city" onchange="this.form.submit()" title="Filter by Ward">
+        <option value="">All Wards / Areas</option>
+        {% for city in cities %}
+        <option value="{{ city }}" {% if filters.city==city %}selected{% endif %}>{{ city }}</option>
+        {% endfor %}
+      </select>
+
+      <select name="category" onchange="this.form.submit()" title="Filter by Category">
+        <option value="">All Categories</option>
+        {% for cat in categories %}
+        <option value="{{ cat }}" {% if filters.category==cat %}selected{% endif %}>{{ cat }}</option>
+        {% endfor %}
+      </select>
+
+      <select name="intake_type" onchange="this.form.submit()" title="Filter by Intake Type">
+        <option value="">All Intake Types</option>
+        <option value="text" {% if filters.intake_type=='text' %}selected{% endif %}>Text Only</option>
+        <option value="image" {% if filters.intake_type=='image' %}selected{% endif %}>Photo Evidences</option>
+      </select>
+
+      <select name="priority" onchange="this.form.submit()" title="Filter by Priority">
+        <option value="">All Priorities</option>
+        {% for p in priorities %}
+        <option value="{{ p }}" {% if filters.priority==p %}selected{% endif %}>{{ p }}</option>
+        {% endfor %}
+      </select>
+
+      <select name="status" onchange="this.form.submit()" title="Filter by Status">
+        <option value="">All Statuses</option>
+        {% for s in statuses %}
+        <option value="{{ s }}" {% if filters.status==s %}selected{% endif %}>{{ s }}</option>
+        {% endfor %}
+      </select>
+
+      <select name="sort" onchange="this.form.submit()" title="Sort order">
+        {% for key, label in sort_options.items() %}
+        <option value="{{ key }}" {% if filters.sort==key %}selected{% endif %}>Sort: {{ label }}</option>
+        {% endfor %}
+      </select>
+
+      {% if filters.city or filters.category or filters.intake_type or filters.status or filters.priority %}
+      <a href="{{ url_for('dashboard') }}" class="btn btn-small btn-ghost">
+        ✕ Clear
+      </a>
+      {% endif %}
+    </form>
+
+    <p class="field-hint" style="margin:-10px 0 16px 4px;">
+      Showing {{ complaints|length }} of {{ stats.total }} registered complaints in BBMP jurisdiction.
+    </p>
+
+    <!-- Complaint Cards (Stacked for Mobile & Responsive for Desktop) -->
+    {% if not complaints %}
+    <div class="card" style="text-align:center; padding:36px 20px;">
+      <div style="font-size:2rem; margin-bottom:8px;">🔍</div>
+      <p style="margin:0; font-size:0.95rem; color:var(--text-muted);">No complaints match the specified filters.</p>
+    </div>
+    {% endif %}
+
+    {% for c in complaints %}
+    {{ dash_card(c, request.full_path) }}
+    {% endfor %}
+
+  </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+const catData = {{ stats.by_category | tojson }};
+const statusData = {{ stats.by_status | tojson }};
+const priorityData = {{ stats.by_priority | tojson }};
+const PRIORITY_COLORS = { High: '#EF4444', Medium: '#F59E0B', Low: '#10B981' };
+
+Chart.defaults.font.family = "'Inter', system-ui, sans-serif";
+Chart.defaults.color = '#64748B';
+
+const categoryChart = new Chart(document.getElementById('categoryChart'), {
+  type: 'bar',
+  data: {
+    labels: catData.map(d => d.category),
+    datasets: [{
+      data: catData.map(d => d.cnt),
+      backgroundColor: '#0284C7',
+      borderRadius: 6,
+      maxBarThickness: 24,
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: { legend: { display: false } },
+    scales: {
+      y: { beginAtZero: true, ticks: { precision: 0 } },
+      x: { ticks: { font: { size: 9 }, maxRotation: 45, minRotation: 45 } }
+    }
+  }
+});
+
+const statusChart = new Chart(document.getElementById('statusChart'), {
+  type: 'doughnut',
+  data: {
+    labels: statusData.map(d => d.status),
+    datasets: [{
+      data: statusData.map(d => d.cnt),
+      backgroundColor: ['#F59E0B', '#0284C7', '#10B981'],
+      borderWidth: 2,
+      borderColor: '#FFFFFF'
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, padding: 10, font: { size: 11 } } } },
+    cutout: '65%'
+  }
+});
+
+const priorityChart = new Chart(document.getElementById('priorityChart'), {
+  type: 'doughnut',
+  data: {
+    labels: priorityData.map(d => d.priority),
+    datasets: [{
+      data: priorityData.map(d => d.cnt),
+      backgroundColor: priorityData.map(d => PRIORITY_COLORS[d.priority] || '#94A3B8'),
+      borderWidth: 2,
+      borderColor: '#FFFFFF'
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, padding: 10, font: { size: 11 } } } },
+    cutout: '65%'
+  }
+});
+
+function refreshDashboardCharts(stats) {
+  if (stats.by_category) {
+    categoryChart.data.labels = stats.by_category.map(d => d.category);
+    categoryChart.data.datasets[0].data = stats.by_category.map(d => d.cnt);
+    categoryChart.update();
+  }
+  if (stats.by_status) {
+    statusChart.data.labels = stats.by_status.map(d => d.status);
+    statusChart.data.datasets[0].data = stats.by_status.map(d => d.cnt);
+    statusChart.update();
+  }
+  if (stats.by_priority) {
+    priorityChart.data.labels = stats.by_priority.map(d => d.priority);
+    priorityChart.data.datasets[0].data = stats.by_priority.map(d => d.cnt);
+    priorityChart.data.datasets[0].backgroundColor = stats.by_priority.map(d => PRIORITY_COLORS[d.priority] || '#94A3B8');
+    priorityChart.update();
+  }
+}
+
+window.onLiveEvent = function (data) {
+  if (data.stats) refreshDashboardCharts(data.stats);
+
+  if (data.type !== 'update' && data.type !== 'upvote') return;
+  var node = document.querySelector('.dash-card[data-complaint-id="' + data.id + '"]');
+  if (!node) return;
+
+  var nextUrl = encodeURIComponent(window.location.pathname + window.location.search);
+  fetch('/partials/dash-card/' + data.id + '?next=' + nextUrl)
+    .then(function (r) { return r.ok ? r.text() : null; })
+    .then(function (html) {
+      if (!html) { node.remove(); return; }
+      var wrapper = document.createElement('div');
+      wrapper.innerHTML = html.trim();
+      var newNode = wrapper.firstElementChild;
+      if (!newNode) return;
+      newNode.classList.add('live-flash');
+      node.replaceWith(newNode);
+      setTimeout(function () { newNode.classList.remove('live-flash'); }, 900);
+    })
+    .catch(function () {});
+};
+</script>
+{% endblock %}

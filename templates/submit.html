@@ -1,0 +1,609 @@
+{% extends "base.html" %}
+{% block title %}Report an Issue &mdash; Citizen Solution Priority{% endblock %}
+
+{% block content %}
+<section class="block" style="padding-top: 0;">
+  <div class="wrap category-selection-canvas">
+
+    <!-- STEP 1: Category Selection Screen (Matching User Reference Image) -->
+    <div id="step-category-picker" class="category-picker-view">
+      <!-- Category Header -->
+      <div class="category-header-banner">
+        <h1 class="category-header-title">Report an Issue</h1>
+        <p class="category-header-subtitle">Select a category to file your complaint</p>
+      </div>
+
+      <!-- 3-Column Floating Cards Grid (Matching User Screenshot) -->
+      <div class="category-screen-grid" role="radiogroup" aria-label="Choose complaint category">
+        
+        <!-- 1. Garbage Collection -->
+        <div class="category-tile-card" data-category-value="Solid Waste" role="radio" tabindex="0">
+          <div class="category-squircle" style="background: #EF4444;">
+            <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+          </div>
+          <span class="category-tile-label">Garbage<br>Collection</span>
+        </div>
+
+        <!-- 2. Road Damage -->
+        <div class="category-tile-card" data-category-value="Road Maintenance" role="radio" tabindex="0">
+          <div class="category-squircle" style="background: #0D9488;">
+            <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
+          </div>
+          <span class="category-tile-label">Road<br>Damage</span>
+        </div>
+
+        <!-- 3. Street Lights -->
+        <div class="category-tile-card" data-category-value="Street Light / Electrical" role="radio" tabindex="0">
+          <div class="category-squircle" style="background: #F59E0B;">
+            <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><line x1="9" y1="18" x2="15" y2="18"></line><line x1="10" y1="22" x2="14" y2="22"></line><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"></path></svg>
+          </div>
+          <span class="category-tile-label">Street<br>Lights</span>
+        </div>
+
+        <!-- 4. Water Issues -->
+        <div class="category-tile-card" data-category-value="Water Supply" role="radio" tabindex="0">
+          <div class="category-squircle" style="background: #2563EB;">
+            <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path></svg>
+          </div>
+          <span class="category-tile-label">Water<br>Issues</span>
+        </div>
+
+        <!-- 5. Drainage -->
+        <div class="category-tile-card" data-category-value="Storm Water Drain" role="radio" tabindex="0">
+          <div class="category-squircle" style="background: #0EA5E9;">
+            <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><line x1="16" y1="13" x2="16" y2="21"></line><line x1="8" y1="13" x2="8" y2="21"></line><line x1="12" y1="15" x2="12" y2="23"></line><path d="M20 16.58A5 5 0 0 0 18 7h-1.26A8 8 0 1 0 4 15.25"></path></svg>
+          </div>
+          <span class="category-tile-label">Drainage<br>Overflow</span>
+        </div>
+
+        <!-- 6. Trees & Plants -->
+        <div class="category-tile-card" data-category-value="Parks & Trees" role="radio" tabindex="0">
+          <div class="category-squircle" style="background: #10B981;">
+            <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"></path><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"></path></svg>
+          </div>
+          <span class="category-tile-label">Tree &amp;<br>Plants</span>
+        </div>
+
+        <!-- 7. Unauthorized Const. -->
+        <div class="category-tile-card" data-category-value="Encroachment" role="radio" tabindex="0">
+          <div class="category-squircle" style="background: #8B5CF6;">
+            <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect><line x1="9" y1="22" x2="9" y2="22.01"></line><line x1="15" y1="22" x2="15" y2="22.01"></line><line x1="9" y1="6" x2="9" y2="6.01"></line><line x1="15" y1="6" x2="15" y2="6.01"></line><line x1="9" y1="10" x2="9" y2="10.01"></line><line x1="15" y1="10" x2="15" y2="10.01"></line><line x1="9" y1="14" x2="9" y2="14.01"></line><line x1="15" y1="14" x2="15" y2="14.01"></line><line x1="9" y1="18" x2="9" y2="18.01"></line><line x1="15" y1="18" x2="15" y2="18.01"></line></svg>
+          </div>
+          <span class="category-tile-label">Unauthorized<br>Const.</span>
+        </div>
+
+        <!-- 8. Sewage & Sanitation -->
+        <div class="category-tile-card" data-category-value="Sewage / Sanitation" role="radio" tabindex="0">
+          <div class="category-squircle" style="background: #0284C7;">
+            <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path></svg>
+          </div>
+          <span class="category-tile-label">Sewage &amp;<br>Sanitation</span>
+        </div>
+
+        <!-- 9. Security & Stray Animals -->
+        <div class="category-tile-card" data-category-value="Stray Animals" role="radio" tabindex="0">
+          <div class="category-squircle" style="background: #475569;">
+            <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+          </div>
+          <span class="category-tile-label">Security &amp;<br>Animals</span>
+        </div>
+
+        <!-- 10. Other -->
+        <div class="category-tile-card" data-category-value="Others" role="radio" tabindex="0">
+          <div class="category-squircle" style="background: #64748B;">
+            <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+          </div>
+          <span class="category-tile-label">Other<br>Issues</span>
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- STEP 2: Complaint Filing Form (Opens after choosing an option) -->
+    <div id="step-complaint-form" class="complaint-form-view" style="display: none;">
+      
+      <!-- Top Selected Category Bar -->
+      <div class="category-active-bar">
+        <div class="category-active-left">
+          <div id="activeCategorySquircle" class="category-active-squircle" style="background: #0284C7;">
+            <span id="activeCategoryIcon">📋</span>
+          </div>
+          <div>
+            <span class="eyebrow" style="margin: 0; font-size: 0.68rem;">Selected Category</span>
+            <h2 id="activeCategoryName" style="font-size: 1.1rem; margin: 0; color: var(--text-main);">Road Maintenance</h2>
+          </div>
+        </div>
+        <button type="button" id="btnChangeCategory" class="btn btn-small btn-ghost" style="padding: 6px 12px; font-size: 0.78rem;">
+          Change &crarr;
+        </button>
+      </div>
+
+      <section id="duplicate-warning" class="duplicate-warning" role="status" aria-live="polite" hidden>
+        <strong>⚠️ A similar complaint has already been reported in your area</strong>
+        <p>Report and support the existing complaint instead of creating a duplicate. Each report adds one support vote; enough votes raise its priority.</p>
+        <ul id="duplicate-list"></ul>
+      </section>
+      <p id="duplicate-check-status" class="field-hint" role="status" aria-live="polite" hidden></p>
+
+      <!-- Complaint Submission Form -->
+      <form class="card form-card" method="POST" enctype="multipart/form-data" action="{{ url_for('submit') }}">
+        
+        <!-- Hidden Category Form Input -->
+        <input type="hidden" id="category" name="category" value="" required>
+
+        <!-- Description & Voice Dictation -->
+        <div class="form-group">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+            <label for="description" style="margin-bottom:0;">Describe the Problem</label>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <select id="source_language" name="source_language" style="padding:4px 8px; font-size:0.75rem; min-height:30px; width:auto; border-radius:var(--radius-sm);" title="Complaint language">
+                {% for code, details in complaint_languages.items() %}
+                <option value="{{ code }}" {% if code == 'en' %}selected{% endif %}>{{ details[0] }}</option>
+                {% endfor %}
+              </select>
+              <button type="button" id="start-voice" class="btn btn-small btn-ghost" style="padding:4px 10px; font-size:0.75rem; min-height:30px;" aria-pressed="false">
+                🎙️ Dictate
+              </button>
+            </div>
+          </div>
+          <textarea id="description" name="description" maxlength="2000" placeholder="Describe the issue in detail, landmark, or specific hazard..."></textarea>
+          <p id="voice-status" class="field-hint" role="status" aria-live="polite">Tap Dictate to speak your complaint in your selected language.</p>
+        </div>
+
+        <!-- Photo Upload Box with Preview -->
+        <div class="form-group">
+          <label>Photo Evidence (Recommended)</label>
+          <div class="photo-uploader-box" id="photoDropArea">
+            <input type="file" id="image" name="image" accept="image/png, image/jpeg, image/webp">
+            <div class="photo-uploader-icon">📷</div>
+            <strong>Add a Photo</strong>
+            <span>Upload evidence photo (JPG, PNG, WebP)</span>
+            <div id="photoPreviewWrap" class="photo-preview-wrap" style="display:none;">
+              <img id="photoPreviewImg" src="" alt="Selected image preview">
+            </div>
+          </div>
+          <div class="photo-camera-actions">
+            <button type="button" id="complaint-camera-start" class="btn btn-small btn-ghost">Use camera</button>
+            <button type="button" id="complaint-camera-take" class="btn btn-small btn-primary" hidden>Take photo</button>
+            <button type="button" id="complaint-camera-stop" class="btn btn-small btn-ghost" hidden>Cancel camera</button>
+          </div>
+          <video id="complaint-camera-preview" class="photo-camera-preview" autoplay playsinline muted aria-label="Complaint photo camera preview" hidden></video>
+          <p id="complaint-camera-status" class="photo-camera-status" role="status" aria-live="polite"></p>
+        </div>
+
+        <!-- Location Information -->
+        <div class="two-col">
+          <div>
+            <label for="city">Area / Ward</label>
+            <select id="city" name="city">
+              <option value="">Select Ward / Area&hellip;</option>
+              {% for city_name in cities %}
+              <option value="{{ city_name }}" {% if citizen_user and citizen_user['area'] == city_name %}selected{% endif %}>{{ city_name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div>
+            <label for="location">Location / Landmark</label>
+            <input type="text" id="location" name="location" placeholder="e.g. Near Metro Station, 5th Cross Road">
+          </div>
+        </div>
+
+        <div class="geo-controls">
+          <button type="button" id="capture-location" class="btn btn-small btn-ghost">
+            📍 Use Current Location
+          </button>
+          <span id="location-status" class="field-hint" role="status" aria-live="polite">GPS attaches precise coordinates for municipal response.</span>
+        </div>
+        <input type="hidden" id="latitude" name="latitude">
+        <input type="hidden" id="longitude" name="longitude">
+
+        <!-- Citizen Identity Details -->
+        <div class="two-col" style="margin-top:14px;">
+          <div>
+            <label for="citizen_name">Your Name</label>
+            <input type="text" id="citizen_name" name="citizen_name" placeholder="Full Name" value="{{ citizen_user['name'] if citizen_user else '' }}" {% if citizen_user %}readonly{% endif %}>
+          </div>
+          <div>
+            <label for="citizen_email">Email Address</label>
+            <input type="email" id="citizen_email" name="citizen_email" autocomplete="email" placeholder="name@example.com" value="{{ citizen_user['email'] if citizen_user else '' }}" {% if citizen_user %}readonly{% endif %}>
+          </div>
+        </div>
+
+        <div class="flag-group" style="background:#F8FAFC; padding:12px 14px; border-radius:var(--radius-md); border:1px solid var(--border-light);">
+          <label>
+            <input type="checkbox" name="email_consent" checked>
+            <span><strong>Receive Status Notifications</strong><br><small style="color:var(--text-muted); font-size:0.78rem;">Get email updates as authorities review and resolve your grievance.</small></span>
+          </label>
+        </div>
+
+        <div style="margin-top: 24px;">
+          <button type="submit" id="newComplaintSubmit" class="btn btn-primary btn-block" style="font-size:1.05rem; padding:14px 24px;">
+            File a New Complaint
+          </button>
+        </div>
+
+        <div style="margin-top: 14px; text-align: center;">
+          <button type="button" id="btnBackToPicker" class="btn btn-small btn-ghost" style="border:none; color:var(--text-muted);">
+            &larr; Back to Category Selection
+          </button>
+        </div>
+      </form>
+    </div>
+
+  </div>
+</section>
+
+<script>
+(function () {
+  var pickerStep = document.getElementById('step-category-picker');
+  var formStep = document.getElementById('step-complaint-form');
+  var categoryTiles = document.querySelectorAll('.category-tile-card');
+  var categoryInput = document.getElementById('category');
+  var activeCategoryName = document.getElementById('activeCategoryName');
+  var activeCategoryIcon = document.getElementById('activeCategoryIcon');
+  var activeCategorySquircle = document.getElementById('activeCategorySquircle');
+  var btnChangeCategory = document.getElementById('btnChangeCategory');
+  var btnBackToPicker = document.getElementById('btnBackToPicker');
+
+  var form = document.querySelector('.form-card');
+  var description = document.getElementById('description');
+  var sourceLanguage = document.getElementById('source_language');
+  var voiceButton = document.getElementById('start-voice');
+  var voiceStatus = document.getElementById('voice-status');
+  var city = document.getElementById('city');
+  var location = document.getElementById('location');
+  var latitude = document.getElementById('latitude');
+  var longitude = document.getElementById('longitude');
+  var locationStatus = document.getElementById('location-status');
+  var duplicateWarning = document.getElementById('duplicate-warning');
+  var duplicateList = document.getElementById('duplicate-list');
+  var duplicateCheckStatus = document.getElementById('duplicate-check-status');
+  var newComplaintSubmit = document.getElementById('newComplaintSubmit');
+  var imageInput = document.getElementById('image');
+  var photoPreviewWrap = document.getElementById('photoPreviewWrap');
+  var photoPreviewImg = document.getElementById('photoPreviewImg');
+  var cameraStartButton = document.getElementById('complaint-camera-start');
+  var cameraTakeButton = document.getElementById('complaint-camera-take');
+  var cameraStopButton = document.getElementById('complaint-camera-stop');
+  var cameraVideo = document.getElementById('complaint-camera-preview');
+  var cameraStatus = document.getElementById('complaint-camera-status');
+  var cameraStream = null;
+  var timer;
+  var controller;
+  var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  var recognition;
+
+  var categoryIconMap = {
+    'Solid Waste': { icon: '🗑️', color: '#EF4444', label: 'Garbage Collection' },
+    'Road Maintenance': { icon: '🛠️', color: '#0D9488', label: 'Road Damage / Potholes' },
+    'Street Light / Electrical': { icon: '💡', color: '#F59E0B', label: 'Street Lights' },
+    'Water Supply': { icon: '💧', color: '#2563EB', label: 'Water Issues' },
+    'Storm Water Drain': { icon: '🌧️', color: '#0EA5E9', label: 'Drainage Overflow' },
+    'Parks & Trees': { icon: '🍃', color: '#10B981', label: 'Tree & Plants' },
+    'Encroachment': { icon: '🏢', color: '#8B5CF6', label: 'Unauthorized Construction' },
+    'Sewage / Sanitation': { icon: '🚽', color: '#0284C7', label: 'Sewage & Sanitation' },
+    'Stray Animals': { icon: '🛡️', color: '#475569', label: 'Security & Animals' },
+    'Others': { icon: '📋', color: '#64748B', label: 'Other Civic Issues' }
+  };
+
+  function selectCategory(catVal) {
+    categoryInput.value = catVal;
+    var meta = categoryIconMap[catVal] || { icon: '📋', color: '#0284C7', label: catVal };
+    activeCategoryName.textContent = meta.label;
+    activeCategoryIcon.textContent = meta.icon;
+    activeCategorySquircle.style.background = meta.color;
+
+    // Transition from Category Picker to Complaint Form
+    pickerStep.style.display = 'none';
+    formStep.style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    requestDuplicateCheck();
+  }
+
+  function showCategoryPicker() {
+    formStep.style.display = 'none';
+    pickerStep.style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  categoryTiles.forEach(function (tile) {
+    tile.addEventListener('click', function () {
+      var catVal = tile.getAttribute('data-category-value');
+      selectCategory(catVal);
+    });
+    tile.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        var catVal = tile.getAttribute('data-category-value');
+        selectCategory(catVal);
+      }
+    });
+  });
+
+  if (btnChangeCategory) btnChangeCategory.addEventListener('click', showCategoryPicker);
+  if (btnBackToPicker) btnBackToPicker.addEventListener('click', showCategoryPicker);
+
+  // Check URL query parameters for pre-selected category
+  var urlParams = new URLSearchParams(window.location.search);
+  var preCategory = urlParams.get('category');
+  if (preCategory && categoryIconMap[preCategory]) {
+    selectCategory(preCategory);
+  }
+
+  // Photo live thumbnail preview
+  if (imageInput && photoPreviewWrap && photoPreviewImg) {
+    imageInput.addEventListener('change', function() {
+      if (cameraStream) stopComplaintCamera();
+      if (imageInput.files && imageInput.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          photoPreviewImg.src = e.target.result;
+          photoPreviewWrap.style.display = 'block';
+        };
+        reader.readAsDataURL(imageInput.files[0]);
+      } else {
+        photoPreviewWrap.style.display = 'none';
+      }
+      requestDuplicateCheck();
+    });
+  }
+
+  function stopComplaintCamera() {
+    if (cameraStream) {
+      cameraStream.getTracks().forEach(function (track) { track.stop(); });
+      cameraStream = null;
+    }
+    cameraVideo.srcObject = null;
+    cameraVideo.hidden = true;
+    cameraTakeButton.hidden = true;
+    cameraStopButton.hidden = true;
+    cameraStartButton.hidden = false;
+  }
+
+  cameraStartButton.addEventListener('click', function () {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      cameraStatus.textContent = 'Camera access is not available in this browser. Choose a photo file instead.';
+      return;
+    }
+    cameraStatus.textContent = 'Allow camera access in your browser to take a complaint photo.';
+    navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: 'environment' } }, audio: false })
+      .then(function (stream) {
+        cameraStream = stream;
+        cameraVideo.srcObject = stream;
+        cameraVideo.hidden = false;
+        cameraStartButton.hidden = true;
+        cameraTakeButton.hidden = false;
+        cameraStopButton.hidden = false;
+        cameraStatus.textContent = 'Camera is ready. Select Take photo when you are ready.';
+      })
+      .catch(function (error) {
+        var messages = {
+          NotAllowedError: 'Camera permission was denied. Allow camera access in browser settings or choose a photo file.',
+          NotFoundError: 'No camera was found. Choose a photo file instead.'
+        };
+        cameraStatus.textContent = messages[error.name] || 'The camera could not be opened. Choose a photo file instead.';
+      });
+  });
+
+  cameraTakeButton.addEventListener('click', function () {
+    if (!cameraStream || !cameraVideo.videoWidth || !cameraVideo.videoHeight) {
+      cameraStatus.textContent = 'Wait for the camera preview, then try taking the photo again.';
+      return;
+    }
+    var canvas = document.createElement('canvas');
+    canvas.width = cameraVideo.videoWidth;
+    canvas.height = cameraVideo.videoHeight;
+    var context = canvas.getContext('2d');
+    if (!context) {
+      cameraStatus.textContent = 'The photo could not be captured. Please try again.';
+      return;
+    }
+    context.drawImage(cameraVideo, 0, 0, canvas.width, canvas.height);
+    canvas.toBlob(function (blob) {
+      if (!blob) {
+        cameraStatus.textContent = 'The photo could not be captured. Please try again.';
+        return;
+      }
+      var photo = new File([blob], 'complaint-photo.jpg', { type: 'image/jpeg' });
+      var transfer = new DataTransfer();
+      transfer.items.add(photo);
+      imageInput.files = transfer.files;
+      imageInput.dispatchEvent(new Event('change', { bubbles: true }));
+      cameraStatus.textContent = 'Photo captured. It will be uploaded with your complaint.';
+      stopComplaintCamera();
+    }, 'image/jpeg', 0.92);
+  });
+
+  cameraStopButton.addEventListener('click', function () {
+    stopComplaintCamera();
+    cameraStatus.textContent = 'Camera closed. You can choose a photo file instead.';
+  });
+
+  window.addEventListener('pagehide', stopComplaintCamera);
+
+  // Voice Input Speech Recognition
+  if (!SpeechRecognition) {
+    voiceButton.disabled = true;
+    voiceStatus.textContent = 'Voice dictation is not supported in this browser. You can type your complaint.';
+  } else {
+    recognition = new SpeechRecognition();
+    recognition.continuous = true;
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+    recognition.onstart = function () {
+      voiceStatus.textContent = 'Listening in ' + sourceLanguage.options[sourceLanguage.selectedIndex].text + '...';
+    };
+    recognition.onresult = function (event) {
+      var spokenSegments = [];
+      for (var index = event.resultIndex; index < event.results.length; index += 1) {
+        if (event.results[index].isFinal) spokenSegments.push(event.results[index][0].transcript);
+      }
+      var spokenText = spokenSegments.join(' ').slice(0, 2000 - description.value.length);
+      if (!spokenText) return;
+      var start = description.selectionStart;
+      var end = description.selectionEnd;
+      var separator = start > 0 && !/\s$/.test(description.value.slice(0, start)) ? ' ' : '';
+      description.setRangeText(separator + spokenText, start, end, 'end');
+      description.dispatchEvent(new Event('input', { bubbles: true }));
+    };
+    recognition.onerror = function (event) {
+      voiceStatus.textContent = 'Voice dictation error (' + event.error + '). You can type your complaint.';
+      voiceButton.setAttribute('aria-pressed', 'false');
+      voiceButton.textContent = '🎙️ Dictate';
+    };
+    recognition.onend = function () {
+      voiceButton.setAttribute('aria-pressed', 'false');
+      voiceButton.textContent = '🎙️ Dictate';
+    };
+    voiceButton.addEventListener('click', function () {
+      if (voiceButton.getAttribute('aria-pressed') === 'true') {
+        recognition.stop();
+        voiceStatus.textContent = 'Voice dictation stopped.';
+        return;
+      }
+      recognition.lang = {{ complaint_languages|tojson }}[sourceLanguage.value][1];
+      try {
+        recognition.start();
+        voiceButton.setAttribute('aria-pressed', 'true');
+        voiceButton.textContent = '⏹️ Stop';
+      } catch (error) {
+        voiceStatus.textContent = 'Could not start voice input. Check mic permissions.';
+      }
+    });
+  }
+
+  // Duplicate Check
+  function requestDuplicateCheck() {
+    window.clearTimeout(timer);
+    newComplaintSubmit.disabled = true;
+    timer = window.setTimeout(checkDuplicates, 450);
+  }
+
+  function checkDuplicates() {
+    var text = description.value.trim();
+    var categoryValue = categoryInput.value;
+    if (controller) {
+      controller.abort();
+      controller = null;
+    }
+    var hasLocation = Boolean(city.value || location.value.trim() || latitude.value);
+    if (!categoryValue || (!text && !hasLocation)) {
+      duplicateWarning.hidden = true;
+      duplicateList.replaceChildren();
+      duplicateCheckStatus.hidden = true;
+      duplicateCheckStatus.textContent = '';
+      newComplaintSubmit.hidden = false;
+      newComplaintSubmit.disabled = false;
+      return;
+    }
+    controller = new AbortController();
+    duplicateCheckStatus.hidden = true;
+    duplicateCheckStatus.textContent = '';
+    var duplicateData = new FormData();
+    duplicateData.append('description', text);
+    duplicateData.append('city', city.value);
+    duplicateData.append('location', location.value);
+    duplicateData.append('category', categoryValue);
+    duplicateData.append('latitude', latitude.value);
+    duplicateData.append('longitude', longitude.value);
+    if (imageInput.files && imageInput.files[0]) {
+      duplicateData.append('image', imageInput.files[0]);
+    }
+    fetch('/api/duplicates', {
+      method: 'POST',
+      body: duplicateData,
+      signal: controller.signal
+    }).then(function (response) {
+      if (!response.ok) throw new Error('Duplicate check unavailable');
+      return response.json();
+    }).then(function (result) {
+      duplicateList.replaceChildren();
+      var matches = Array.isArray(result.matches) ? result.matches : [];
+      matches.forEach(function (match) {
+        var item = document.createElement('li');
+        var link = document.createElement('a');
+        var complaintPath = '/complaint/' + encodeURIComponent(match.id);
+        link.href = complaintPath;
+        link.textContent = '#' + String(match.id).padStart(4, '0') + ' ' + match.category + ' - ' + (match.description || 'Photo complaint');
+        item.appendChild(link);
+        var details = document.createElement('span');
+        details.className = 'duplicate-meta';
+        details.textContent = ' ' + (match.city || 'Area not set') + ' | ' + (match.location || 'Location not set') + ' | ' + match.status +
+          ' | ' + (match.upvotes || 0) + ' support reports' +
+          (match.distance_m === null ? '' : ' | ' + match.distance_m + ' m away');
+        item.appendChild(details);
+        var actionRow = document.createElement('div');
+        actionRow.className = 'duplicate-actions';
+        var voteForm = document.createElement('form');
+        voteForm.method = 'POST';
+        voteForm.action = complaintPath + '/upvote';
+        var nextPage = document.createElement('input');
+        nextPage.type = 'hidden';
+        nextPage.name = 'next';
+        nextPage.value = complaintPath;
+        voteForm.appendChild(nextPage);
+        var voteButton = document.createElement('button');
+        voteButton.type = 'submit';
+        voteButton.className = 'btn btn-small btn-primary';
+        voteButton.textContent = match.has_upvoted ? 'Already reported' : 'Report Existing Complaint';
+        voteButton.disabled = Boolean(match.has_upvoted);
+        voteForm.appendChild(voteButton);
+        actionRow.appendChild(voteForm);
+        var viewLink = document.createElement('a');
+        viewLink.href = link.href;
+        viewLink.className = 'btn btn-small btn-ghost';
+        viewLink.textContent = 'View full complaint';
+        actionRow.appendChild(viewLink);
+        item.appendChild(actionRow);
+        duplicateList.appendChild(item);
+      });
+      duplicateWarning.hidden = matches.length === 0;
+      newComplaintSubmit.hidden = matches.length > 0;
+      newComplaintSubmit.disabled = false;
+    }).catch(function (error) {
+      if (error.name !== 'AbortError') {
+        duplicateWarning.hidden = true;
+        duplicateCheckStatus.textContent = 'Similar reports could not be checked right now. You can still submit your report.';
+        duplicateCheckStatus.hidden = false;
+        newComplaintSubmit.hidden = false;
+        newComplaintSubmit.disabled = false;
+      }
+    });
+  }
+
+  // Geolocation Button
+  document.getElementById('capture-location').addEventListener('click', function () {
+    if (!navigator.geolocation) {
+      locationStatus.textContent = 'Geolocation is not supported by your browser.';
+      return;
+    }
+    locationStatus.textContent = 'Detecting current coordinates...';
+    navigator.geolocation.getCurrentPosition(function (position) {
+      latitude.value = position.coords.latitude.toFixed(6);
+      longitude.value = position.coords.longitude.toFixed(6);
+      locationStatus.textContent = '✓ Location acquired (~' + Math.round(position.coords.accuracy) + ' m accuracy).';
+      requestDuplicateCheck();
+    }, function (error) {
+      locationStatus.textContent = 'Could not access GPS. You can type the area and landmark.';
+    }, { enableHighAccuracy: true, timeout: 12000, maximumAge: 30000 });
+  });
+
+  description.addEventListener('input', requestDuplicateCheck);
+  city.addEventListener('change', requestDuplicateCheck);
+  location.addEventListener('input', requestDuplicateCheck);
+
+  form.addEventListener('submit', function (e) {
+    if (!categoryInput.value) {
+      e.preventDefault();
+      alert('Please select a complaint category first.');
+      showCategoryPicker();
+      return;
+    }
+    if (controller) controller.abort();
+  });
+})();
+</script>
+<script src="{{ url_for('static', filename='interface-language.js') }}?v=11"></script>
+{% endblock %}

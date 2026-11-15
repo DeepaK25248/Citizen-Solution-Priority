@@ -1,0 +1,280 @@
+{% extends "base.html" %}
+{% block title %}Citizen Solution Priority &mdash; Your Voice. Your Priority. Your Solution.{% endblock %}
+
+{% block content %}
+<div class="home-canvas">
+
+  <!-- =========================================================================
+       1. HERO SECTION (Matching Reference Mockup Exactly)
+       ========================================================================= -->
+  <section class="home-hero-section">
+    <div class="wrap">
+      <div class="hero-split-grid">
+        <!-- Hero Text & CTAs (Left) -->
+        <div class="hero-text-col">
+          <div class="hero-eyebrow-row">
+            <span class="hero-eyebrow-line"></span>
+            <span class="hero-eyebrow-label">CITIZEN SOLUTION PRIORITY</span>
+          </div>
+
+          <h1 class="hero-main-heading">
+            Your Voice.<br>
+            <span class="hero-accent-text">Your Priority.</span><br>
+            Your Solution.
+          </h1>
+
+          <p class="hero-lead-desc">
+            Report civic issues, track their progress, and help build a better community.
+          </p>
+
+        </div>
+
+        <!-- Hero Visual Illustration & Callout (Right) -->
+        <div class="hero-visual-col">
+          <!-- "Cleaner Greener Better" Hand-drawn Callout Badge -->
+          <div class="hero-greener-badge" aria-hidden="true">
+            <span class="greener-text">Cleaner<br>Greener<br>Better</span>
+            <svg class="greener-swoosh" viewBox="0 0 80 16" fill="none">
+              <path d="M4 12C24 4 56 4 76 12" stroke="#10B981" stroke-width="3" stroke-linecap="round"/>
+            </svg>
+          </div>
+
+          <!-- Hero Skyline Artwork -->
+          <div class="hero-image-wrapper">
+            <img src="{{ url_for('static', filename='city-hero-skyline.jpg') }}" alt="Modern city skyline with green trees and park" class="hero-skyline-visual" loading="eager">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- =========================================================================
+       2. HOW IT WORKS SECTION (Matching Reference Mockup)
+       ========================================================================= -->
+  <section id="how-it-works" class="home-section how-it-works-block">
+    <div class="wrap">
+      <div class="section-center-head">
+        <h2 class="section-center-title">How It Works</h2>
+        <p class="section-center-sub">Just a few simple steps to get your issue resolved.</p>
+      </div>
+
+      <div class="how-flow-container">
+        <!-- Step 1 -->
+        <div class="how-flow-card">
+          <div class="how-circle-wrap icon-blue">
+            <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+            <span class="how-step-tag">1</span>
+          </div>
+          <h3 class="how-card-title">Report an Issue</h3>
+          <p class="how-card-desc">Submit your complaint with proper details.</p>
+        </div>
+
+        <div class="how-flow-arrow" aria-hidden="true">&rarr;</div>
+
+        <!-- Step 2 -->
+        <div class="how-flow-card">
+          <div class="how-circle-wrap icon-teal">
+            <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <span class="how-step-tag">2</span>
+          </div>
+          <h3 class="how-card-title">Track the Complaint</h3>
+          <p class="how-card-desc">Check the status and progress anytime.</p>
+        </div>
+
+        <div class="how-flow-arrow" aria-hidden="true">&rarr;</div>
+
+        <!-- Step 3 -->
+        <div class="how-flow-card">
+          <div class="how-circle-wrap icon-purple">
+            <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
+            <span class="how-step-tag">3</span>
+          </div>
+          <h3 class="how-card-title">Authorities Review It</h3>
+          <p class="how-card-desc">Relevant departments review your complaint.</p>
+        </div>
+
+        <div class="how-flow-arrow" aria-hidden="true">&rarr;</div>
+
+        <!-- Step 4 -->
+        <div class="how-flow-card">
+          <div class="how-circle-wrap icon-amber">
+            <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+              <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+            <span class="how-step-tag">4</span>
+          </div>
+          <h3 class="how-card-title">Get Resolution</h3>
+          <p class="how-card-desc">Your issue is resolved and you are notified.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- =========================================================================
+       3. PRIORITY SYSTEM SECTION (Matching Reference Mockup)
+       ========================================================================= -->
+  <section class="home-section priority-system-block">
+    <div class="wrap">
+      <div class="priority-system-grid">
+        <!-- Left Intro Card -->
+        <div class="priority-intro-card">
+          <div class="priority-dash-line"></div>
+          <h2 class="priority-intro-title">Priority System</h2>
+          <p class="priority-intro-desc">
+            Priority-based issue management helps identify and organize important citizen concerns.
+          </p>
+          <a href="{{ url_for('track_complaint') }}" class="btn-priority-learn">
+            Learn More &rarr;
+          </a>
+        </div>
+
+        <!-- Right 3 Colored Priority Cards -->
+        <div class="priority-spec-cards-group">
+          <!-- High Priority Card -->
+          <div class="priority-tier-card tier-high">
+            <div class="tier-icon-circle icon-high">
+              <span>!</span>
+            </div>
+            <h3 class="tier-card-title text-high">High Priority</h3>
+            <p class="tier-card-desc">Urgent issues that need immediate action.</p>
+          </div>
+
+          <!-- Medium Priority Card -->
+          <div class="priority-tier-card tier-medium">
+            <div class="tier-icon-circle icon-medium">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+            </div>
+            <h3 class="tier-card-title text-medium">Medium Priority</h3>
+            <p class="tier-card-desc">Important issues that require timely attention.</p>
+          </div>
+
+          <!-- Low Priority Card -->
+          <div class="priority-tier-card tier-low">
+            <div class="tier-icon-circle icon-low">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <h3 class="tier-card-title text-low">Low Priority</h3>
+            <p class="tier-card-desc">General issues for planned resolution.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- =========================================================================
+       4. KEY FEATURES SECTION (Matching Reference Mockup)
+       ========================================================================= -->
+  <section class="home-section key-features-block">
+    <div class="wrap">
+      <div class="section-center-head">
+        <h2 class="section-center-title">Key Features</h2>
+        <p class="section-center-sub">Everything you need to make your community better.</p>
+      </div>
+
+      <div class="features-five-grid">
+        <!-- Feature 1 -->
+        <div class="feature-box-card">
+          <div class="feature-round-icon bg-light-blue">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="22" y1="2" x2="11" y2="13"></line>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+          </div>
+          <h3 class="feature-title">Easy Issue Reporting</h3>
+          <p class="feature-desc">Report civic issues in just a few clicks.</p>
+        </div>
+
+        <!-- Feature 2 -->
+        <div class="feature-box-card">
+          <div class="feature-round-icon bg-light-teal">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </div>
+          <h3 class="feature-title">Complaint Tracking</h3>
+          <p class="feature-desc">Track your complaint in real time.</p>
+        </div>
+
+        <!-- Feature 3 -->
+        <div class="feature-box-card">
+          <div class="feature-round-icon bg-light-purple">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
+          </div>
+          <h3 class="feature-title">Priority Management</h3>
+          <p class="feature-desc">Organize issues by priority level.</p>
+        </div>
+
+        <!-- Feature 4 -->
+        <div class="feature-box-card">
+          <div class="feature-round-icon bg-light-amber">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            </svg>
+          </div>
+          <h3 class="feature-title">Status Updates</h3>
+          <p class="feature-desc">Get real-time updates on your complaint.</p>
+        </div>
+
+        <!-- Feature 5 -->
+        <div class="feature-box-card">
+          <div class="feature-round-icon bg-light-navy">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+          </div>
+          <h3 class="feature-title">Citizen Dashboard</h3>
+          <p class="feature-desc">View all your complaints in one place.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- =========================================================================
+       5. TOGETHER FOR A BETTER COMMUNITY BANNER (Matching Reference Mockup)
+       ========================================================================= -->
+  <section class="home-section community-cta-block">
+    <div class="wrap">
+      <div class="community-banner-card">
+        <div class="community-content-side">
+          <h3 class="community-card-title">Together for a Better Community</h3>
+          <p class="community-card-subtitle">
+            Your participation makes a difference. Report, track, and help create a cleaner, safer and better community.
+          </p>
+
+        </div>
+
+        <div class="community-visual-side" aria-hidden="true">
+          <img src="{{ url_for('static', filename='city-hero-skyline.jpg') }}" alt="Better community skyline" class="community-skyline-art">
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+{% endblock %}

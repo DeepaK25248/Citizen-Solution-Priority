@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+{% block title %}My Reports &mdash; Citizen Solution Priority{% endblock %}
+
+{% block content %}
+<section class="block">
+  <div class="wrap" style="max-width: 720px; margin: 0 auto;">
+    
+    <div class="section-head">
+      <div>
+        <span class="eyebrow">Citizen Activity</span>
+        <h1 style="font-size: 1.6rem; margin-bottom: 4px;">My Reports</h1>
+        <p style="font-size: 0.9rem; margin: 0;">{{ complaints|length }} issue{{ '' if complaints|length == 1 else 's' }} reported under your citizen account.</p>
+      </div>
+      <a href="{{ url_for('submit') }}" class="btn btn-primary btn-small">
+        + Report an Issue
+      </a>
+    </div>
+
+    {% if complaints %}
+    <!-- Filter Bar (Search + Status Filter) -->
+    <div class="card" style="padding:14px; margin-bottom:16px;">
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <div class="input-with-icon">
+          <span class="input-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          </span>
+          <input id="report-search" type="search" placeholder="Search by ID, keyword, or ward area..." autocomplete="off">
+        </div>
+        
+        <div style="display:flex; align-items:center; gap:8px;">
+          <label for="report-status-filter" style="margin:0; font-size:0.8rem; color:var(--text-muted); white-space:nowrap;">Status:</label>
+          <select id="report-status-filter" style="min-height:38px; padding:6px 12px; font-size:0.85rem;">
+            <option value="">All Statuses</option>
+            {% for status in STATUSES %}
+            <option value="{{ status }}">{{ 'In Progress' if status == 'Processing' else 'Resolved' if status == 'Solved' else status }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+    </div>
+    
+    <p id="report-filter-count" class="field-hint" style="margin:-6px 0 14px 4px;" aria-live="polite">Showing {{ complaints|length }} reports</p>
+    
+    <!-- Complaints List (Prompt Section 9 Cards) -->
+    <div class="complaint-list">
+      {% for complaint in complaints %}
+      <article class="complaint-card" data-report-card data-status="{{ complaint['status'] }}" data-search="{{ [complaint['id'], complaint['category'], complaint['city'], complaint['location'], complaint['description']]|join(' ')|lower }}">
+        
+        <div class="complaint-card-header">
+          <span class="row-id">#{{ '%04d'|format(complaint['id']) }}</span>
+          <span class="badge badge-status-{{ complaint['status'] }}">{{ complaint['status'] }}</span>
+        </div>
+
+        <div>
+          <h2 class="complaint-card-title">{{ category_icons.get(complaint['category'], '📋') }} {{ complaint['category'] }}</h2>
+          <p class="complaint-card-desc" data-translation-ignore style="margin-top:4px;">{{ (complaint['description'] or 'Photo complaint submitted')[:140] }}</p>
+        </div>
+
+        {% if complaint['image_path'] %}
+        <img src="{{ complaint['image_path']|complaint_image_url }}" alt="Complaint thumbnail" class="complaint-card-thumb">
+        {% endif %}
+
+        <div class="complaint-card-meta" data-translation-ignore>
+          <span>📍 {{ complaint['city'] or 'Ward not specified' }}{% if complaint['location'] %}, {{ complaint['location'] }}{% endif %}</span>
+          <span>📅 {{ complaint['created_at'] }}</span>
+        </div>
+
+        <div class="complaint-card-footer">
+          <span class="badge badge-upvotes">&uarr; {{ complaint['upvotes'] }} upvotes</span>
+          <a href="{{ url_for('track_complaint', complaint_id=complaint['id']) }}" class="btn btn-small btn-ghost" style="padding:6px 14px;">
+            View Details &rarr;
+          </a>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+
+    <div id="report-filter-empty" class="card" style="text-align:center; padding:32px 20px;" hidden>
+      <div style="font-size:2.2rem; margin-bottom:8px;">🔍</div>
+      <h2 style="font-size:1.2rem; margin-bottom:4px;">No matching reports</h2>
+      <p style="font-size:0.85rem; color:var(--text-muted); margin:0;">Try changing your search terms or status filter.</p>
+    </div>
+
+    {% else %}
+    <div class="card" style="text-align:center; padding:40px 24px;">
+      <div style="font-size:2.8rem; margin-bottom:12px;">📑</div>
+      <h2 style="font-size:1.3rem; margin-bottom:6px;">No reports yet</h2>
+      <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:20px;">Civic issues you report while signed in will appear here with live tracking.</p>
+      <a href="{{ url_for('submit') }}" class="btn btn-primary">
+        Report an Issue
+      </a>
+    </div>
+    {% endif %}
+
+  </div>
+</section>
+
+{% if complaints %}
+<script>
+(function () {
+  var search = document.getElementById('report-search');
+  var status = document.getElementById('report-status-filter');
+  var cards = Array.from(document.querySelectorAll('[data-report-card]'));
+  var count = document.getElementById('report-filter-count');
+  var empty = document.getElementById('report-filter-empty');
+
+  function filterReports() {
+    var query = search.value.trim().toLowerCase();
+    var selectedStatus = status.value;
+    var visibleCount = 0;
+    cards.forEach(function (card) {
+      var visible = (!selectedStatus || card.dataset.status === selectedStatus) && card.dataset.search.includes(query);
+      card.hidden = !visible;
+      if (visible) visibleCount += 1;
+    });
+    count.textContent = 'Showing ' + visibleCount + ' of ' + cards.length + ' reports';
+    empty.hidden = visibleCount > 0;
+  }
+
+  search.addEventListener('input', filterReports);
+  status.addEventListener('change', filterReports);
+})();
+</script>
+{% endif %}
+{% endblock %}

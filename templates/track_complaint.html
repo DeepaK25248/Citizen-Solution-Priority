@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+{% block title %}Track Your Complaint &mdash; Citizen Solution Priority{% endblock %}
+
+{% block content %}
+<section class="block">
+  <div class="wrap" style="max-width: 640px; margin: 0 auto;">
+    
+    <div class="section-head">
+      <div>
+        <span class="eyebrow">Real-Time Civic Tracking</span>
+        <h1 style="font-size: 1.6rem; margin-bottom: 4px;">Track Your Complaint</h1>
+        <p style="font-size: 0.9rem; margin: 0;">Follow the live investigation and resolution status of your filed issue.</p>
+      </div>
+    </div>
+
+    <!-- Search Form Card (Prompt Section 12) -->
+    <form class="card form-card" method="POST" action="{{ url_for('track_complaint') }}">
+      <div class="login-field">
+        <label for="complaint_id">Complaint Number</label>
+        <div class="input-with-icon">
+          <span class="input-icon" aria-hidden="true" style="font-weight:700; color:var(--primary);">#</span>
+          <input id="complaint_id" name="complaint_id" type="number" min="1" max="9999999999"
+                 value="{{ complaint_id }}" placeholder="e.g. 518" required autocomplete="off">
+        </div>
+      </div>
+
+      <div class="login-field">
+        <label for="contact">Registered Email or Mobile Number</label>
+        <div class="input-with-icon">
+          <span class="input-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+          </span>
+          <input id="contact" name="contact" type="text" maxlength="254" required
+                 value="{{ contact }}" autocomplete="email" placeholder="As entered when filing">
+        </div>
+      </div>
+
+      {% if error %}
+      <div class="flash flash-error" role="alert" style="margin-top:10px;">
+        {{ error }}
+      </div>
+      {% endif %}
+
+      <button type="submit" class="btn btn-primary btn-block" style="margin-top:8px;">
+        Track Complaint
+      </button>
+    </form>
+
+    <!-- Tracked Complaint Details & Status Timeline (Prompt Sections 10 & 12) -->
+    {% if tracked %}
+    {% set status_step = statuses.index(tracked['status']) %}
+    <section class="card" aria-live="polite" style="padding:24px;">
+      
+      <!-- Complaint Header -->
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:16px;">
+        <div>
+          <span class="row-id">#{{ '%04d'|format(tracked['id']) }}</span>
+          <h2 style="font-size:1.3rem; margin:8px 0 2px;">{{ category_icons.get(tracked['category'], '') }} {{ tracked['category'] }}</h2>
+          <span class="field-hint">Filed on {{ tracked['created_at'] }}</span>
+        </div>
+        <span class="badge badge-status-{{ tracked['status'] }}" style="font-size:0.85rem; padding:6px 12px;">
+          {{ tracked['status'] }}
+        </span>
+      </div>
+
+      <!-- Photo Evidence -->
+      {% if tracked['image_path'] %}
+      <div style="margin: 16px 0;">
+        <img src="{{ tracked['image_path']|complaint_image_url }}"
+             alt="Complaint evidence photo"
+             class="complaint-card-thumb" style="max-height: 220px; border-radius: var(--radius-lg);">
+        <p class="field-hint" style="text-align:center; margin-top:6px;">
+          {{ 'Representative category reference' if tracked['representative_image'] else 'Submitted photo evidence' }}
+        </p>
+      </div>
+      {% endif %}
+
+      <!-- Visual Status Timeline (Prompt Section 10) -->
+      <div class="timeline-container" style="margin:16px 0 0; padding:18px; box-shadow:none; border:1px solid var(--border-light);">
+        <span class="eyebrow">Resolution Progress</span>
+        <h3 style="font-size:1.05rem; margin-bottom:14px;">Status Timeline</h3>
+
+        <ol class="visual-timeline" aria-label="Complaint processing progress">
+          <!-- Step 1: Complaint Submitted -->
+          <li class="visual-timeline-step is-complete">
+            <span class="timeline-marker" aria-hidden="true">&#10003;</span>
+            <div class="timeline-info">
+              <strong>Complaint Submitted</strong>
+              <small>Grievance officially registered with BBMP Central Registry.</small>
+            </div>
+          </li>
+
+          <!-- Step 2: Reviewed -->
+          <li class="visual-timeline-step {% if status_step >= 0 %}is-complete{% endif %}">
+            <span class="timeline-marker" aria-hidden="true">&#10003;</span>
+            <div class="timeline-info">
+              <strong>Reviewed</strong>
+              <small>Categorized and validated by municipal triage desk.</small>
+            </div>
+          </li>
+
+          <!-- Step 3: Assigned to Department -->
+          <li class="visual-timeline-step {% if status_step >= 1 %}is-complete{% elif status_step == 0 %}is-current{% endif %}">
+            <span class="timeline-marker" aria-hidden="true">
+              {% if status_step >= 1 %}&#10003;{% elif status_step == 0 %}&#9679;{% else %}&#9675;{% endif %}
+            </span>
+            <div class="timeline-info">
+              <strong>Assigned to Department</strong>
+              <small>Routed to relevant zonal engineering & maintenance staff.</small>
+            </div>
+          </li>
+
+          <!-- Step 4: Work in Progress -->
+          <li class="visual-timeline-step {% if status_step >= 2 %}is-complete{% elif status_step == 1 %}is-current{% endif %}">
+            <span class="timeline-marker" aria-hidden="true">
+              {% if status_step >= 2 %}&#10003;{% elif status_step == 1 %}&#9679;{% else %}&#9675;{% endif %}
+            </span>
+            <div class="timeline-info">
+              <strong>Work in Progress</strong>
+              <small>Inspection underway, field crew dispatched for repairs.</small>
+            </div>
+          </li>
+
+          <!-- Step 5: Resolved -->
+          <li class="visual-timeline-step {% if status_step == 2 %}is-complete is-current{% endif %}">
+            <span class="timeline-marker" aria-hidden="true">
+              {% if status_step == 2 %}&#10003;{% else %}&#9675;{% endif %}
+            </span>
+            <div class="timeline-info">
+              <strong>Resolved</strong>
+              <small>Issue inspected, corrected, and closed by ward officer.</small>
+            </div>
+          </li>
+        </ol>
+      </div>
+
+      <div style="margin-top: 18px; text-align: center;">
+        <a href="{{ url_for('home') }}" class="btn btn-small btn-ghost">
+          &larr; Back to Home
+        </a>
+      </div>
+    </section>
+
+    <script>
+    var TRACKED_COMPLAINT_ID = {{ tracked['id'] }};
+    window.onLiveEvent = function (data) {
+      if (data.type === 'update' && Number(data.id) === TRACKED_COMPLAINT_ID) {
+        window.location.reload();
+      }
+    };
+    </script>
+    {% endif %}
+
+  </div>
+</section>
+{% endblock %}

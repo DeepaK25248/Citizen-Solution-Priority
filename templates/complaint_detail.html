@@ -1,0 +1,252 @@
+{% extends "base.html" %}
+{% block title %}Complaint #{{ '%04d'|format(c['id']) }} &mdash; Citizen Solution Priority{% endblock %}
+
+{% block content %}
+<section class="block">
+  <div class="wrap" style="max-width: 860px; margin: 0 auto;">
+    
+    <!-- Top Back Navigation -->
+    <div style="margin-bottom: 16px;">
+      <a href="{{ url_for('my_complaints') if session.get('authority_authenticated') else url_for('citizen_reports') if citizen_user else url_for('home') }}" class="btn btn-small btn-ghost" style="padding:6px 14px;">
+        &larr; Back to Complaints
+      </a>
+    </div>
+
+    <div class="detail-grid">
+      <!-- Main Complaint Card -->
+      <div>
+        <div class="card" style="padding: 24px;">
+          {% set eff = effective_priority(c['priority'], c['upvotes'], c['priority_locked']) %}
+          
+          {% if c['is_demo'] and not config.get('CITYSOLUTION_PRESENTATION_MODE') %}
+          <div class="badge badge-demo" role="note" style="display:block; white-space:normal; margin-bottom:14px;">
+            DEMO DATA - This is not a real citizen report. No municipal work or notification is associated with it.
+          </div>
+          {% endif %}
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:14px;">
+            <div>
+              <span class="row-id">#{{ '%04d'|format(c['id']) }}</span>
+              <h1 style="font-size: 1.45rem; margin: 8px 0 2px;">
+                {{ category_icons.get(c['category'], '📋') }} {{ c['category'] }}
+              </h1>
+              <span class="field-hint">Reported on {{ c['created_at'] }}</span>
+            </div>
+            <div style="display:flex; flex-direction:column; align-items:flex-end; gap:6px;">
+              <span class="badge badge-status-{{ c['status'] }}" style="font-size:0.85rem; padding:6px 12px;">
+                {{ c['status'] }}
+              </span>
+              <span class="badge badge-priority-{{ eff }}">
+                {{ eff }} priority
+              </span>
+            </div>
+          </div>
+
+          <!-- Upvote Button -->
+          {% if not c['is_demo'] or config.get('CITYSOLUTION_PRESENTATION_MODE') %}
+          <form method="POST" action="{{ url_for('upvote_complaint', complaint_id=c['id']) }}" style="margin: 10px 0 16px;">
+            <input type="hidden" name="next" value="{{ url_for('complaint_detail', complaint_id=c['id']) }}">
+            <button type="submit" class="btn btn-small btn-ghost" style="background:#EFF6FF; border-color:#DBEAFE; color:#1D4ED8;" {% if has_upvoted %}disabled{% endif %}>
+              {% if has_upvoted %}✓ You already reported this issue{% elif request.args.get('duplicate') == '1' %}Report Existing Complaint{% else %}👍 Upvote this issue{% endif %} &bull; {{ c['upvotes'] }} {{ 'sample vote' if c['is_demo'] else 'citizen' if c['upvotes'] == 1 else 'citizens' }} {{ 'recorded' if c['is_demo'] else 'agreed' }}
+            </button>
+            <span class="field-hint" style="display:block; margin-top:4px;">One upvote per {{ 'citizen account' if citizen_user else 'browser' }}. Upvotes help highlight shared concerns.</span>
+          </form>
+          {% endif %}
+
+          <!-- Photo Evidence Gallery (Prompt Section 10) -->
+          {% if c['image_path'] %}
+          <div style="margin: 18px 0;">
+            <label style="font-size:0.84rem; font-weight:700;">Photo Evidence</label>
+            <img src="{{ c['image_path']|complaint_image_url }}" alt="Photo evidence" class="complaint-card-thumb" style="max-height: 280px; width:100%; border-radius: var(--radius-lg); margin-top:6px;">
+          </div>
+          {% endif %}
+
+          <!-- Description Section -->
+          <div style="background:#F8FAFC; border:1px solid var(--border-light); border-radius:var(--radius-md); padding:16px; margin-top:16px;">
+            <h3 style="font-size: 0.95rem; margin-bottom: 6px;">Description</h3>
+            <p style="margin: 0; font-size: 0.92rem; color: #334155; line-height:1.5;">
+              {{ c['description'] or 'No written text was provided; please see submitted photo evidence above.' }}
+            </p>
+            {% if c['translated_description'] %}
+            <h4 style="font-size: 0.85rem; margin: 12px 0 4px; color: var(--primary);">English Translation</h4>
+            <p style="margin: 0; font-size: 0.88rem; color: #334155;">{{ c['translated_description'] }}</p>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Visual Status Timeline (Prompt Section 10) -->
+        <div class="card" style="padding: 24px;">
+          {% set status_step = STATUSES.index(c['status']) %}
+          <span class="eyebrow">Status Progress</span>
+          <h2 style="font-size: 1.15rem; margin-bottom: 16px;">Resolution Timeline</h2>
+
+          {% if c['is_demo'] %}
+          <p role="note">This project's sample dataset is for presentation; its status and votes are illustrative, not live civic service activity.</p>
+          {% else %}
+          <ol class="visual-timeline" aria-label="Complaint timeline">
+            <li class="visual-timeline-step is-complete">
+              <span class="timeline-marker">&#10003;</span>
+              <div class="timeline-info">
+                <strong>Complaint Submitted</strong>
+                <small>Issue filed and logged in BBMP grievance system.</small>
+              </div>
+            </li>
+
+            <li class="visual-timeline-step {% if status_step >= 0 %}is-complete{% endif %}">
+              <span class="timeline-marker">&#10003;</span>
+              <div class="timeline-info">
+                <strong>Reviewed</strong>
+                <small>Validated by ward administration desk.</small>
+              </div>
+            </li>
+
+            <li class="visual-timeline-step {% if status_step >= 1 %}is-complete{% elif status_step == 0 %}is-current{% endif %}">
+              <span class="timeline-marker">
+                {% if status_step >= 1 %}&#10003;{% elif status_step == 0 %}&#9679;{% else %}&#9675;{% endif %}
+              </span>
+              <div class="timeline-info">
+                <strong>Assigned to Department</strong>
+                <small>Dispatched to responsible engineering unit.</small>
+              </div>
+            </li>
+
+            <li class="visual-timeline-step {% if status_step >= 2 %}is-complete{% elif status_step == 1 %}is-current{% endif %}">
+              <span class="timeline-marker">
+                {% if status_step >= 2 %}&#10003;{% elif status_step == 1 %}&#9679;{% else %}&#9675;{% endif %}
+              </span>
+              <div class="timeline-info">
+                <strong>Work in Progress</strong>
+                <small>Field technicians executing site remediation.</small>
+              </div>
+            </li>
+
+            <li class="visual-timeline-step {% if status_step == 2 %}is-complete is-current{% endif %}">
+              <span class="timeline-marker">
+                {% if status_step == 2 %}&#10003;{% else %}&#9675;{% endif %}
+              </span>
+              <div class="timeline-info">
+                <strong>Resolved</strong>
+                <small>Work verified and completed by municipal officer.</small>
+              </div>
+            </li>
+          </ol>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Ticket Metadata & Authority Controls -->
+      <div>
+        <div class="ticket-stamp">
+          <div class="ticket-top">
+            <span class="row-id">#{{ '%04d'|format(c['id']) }}</span>
+            <span style="font-weight:700; color:var(--text-main);">{{ 'Project Sample' if c['is_demo'] and config.get('CITYSOLUTION_PRESENTATION_MODE') else 'DEMO RECORD' if c['is_demo'] else 'BBMP Docket' }}</span>
+          </div>
+
+          <div class="ticket-row"><span>Category</span><span>{{ c['category'] }}</span></div>
+          <div class="ticket-row"><span>Intake Type</span><span>{{ 'Photo + Text' if c['complaint_type']=='image' and c['description'] else 'Photo' if c['complaint_type']=='image' else 'Text' }}</span></div>
+          <div class="ticket-row"><span>Priority</span><span>{{ eff }}</span></div>
+          <div class="ticket-row"><span>Upvotes</span><span>{{ c['upvotes'] }}</span></div>
+          <div class="ticket-row"><span>Area / Ward</span><span>{{ c['city'] or 'Bengaluru' }}</span></div>
+          <div class="ticket-row"><span>Landmark</span><span>{{ c['location'] or 'Not provided' }}</span></div>
+          {% if session.get('authority_authenticated') %}
+          <div class="ticket-row"><span>Citizen Name</span><span>{{ c['citizen_name'] or 'Anonymous Citizen' }}</span></div>
+          <div class="ticket-row"><span>Contact Email</span><span>{{ c['citizen_email'] or 'Not on file' }}</span></div>
+          <div class="ticket-row"><span>Email Alerts</span><span>{{ 'Subscribed' if c['email_opt_in'] else 'No' }}</span></div>
+          {% if c['latitude'] is not none and c['longitude'] is not none %}
+          <div class="ticket-row"><span>GPS Pin</span><span><a href="https://www.openstreetmap.org/?mlat={{ c['latitude'] }}&amp;mlon={{ c['longitude'] }}#map=18/{{ c['latitude'] }}/{{ c['longitude'] }}" target="_blank" rel="noopener">📍 Open in Map</a></span></div>
+          {% endif %}
+          {% endif %}
+          <div class="ticket-row"><span>Filed Date</span><span>{{ c['created_at'] }}</span></div>
+        </div>
+
+        <!-- Authority Management Controls -->
+        {% if session.get('authority_authenticated') %}
+        <div class="card" style="padding:20px; border-left:4px solid var(--primary);">
+          <span class="eyebrow">Authority Desk Controls</span>
+          <h3 style="font-size:1.05rem; margin-bottom:12px;">Manage Complaint</h3>
+
+          <form method="POST" action="{{ url_for('update_complaint', complaint_id=c['id']) }}">
+            <div class="form-group">
+              <label for="status">Update Status</label>
+              <select id="status" name="status">
+                {% for s in STATUSES %}
+                <option value="{{ s }}" {% if c['status']==s %}selected{% endif %}>{{ s }}</option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="priority">Priority Tier</label>
+              <select id="priority" name="priority">
+                {% for p in PRIORITIES %}
+                <option value="{{ p }}" {% if c['priority']==p %}selected{% endif %}>{{ p }}</option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="category_update">Category</label>
+              <select id="category_update" name="category">
+                {% for cat in ALL_CATEGORIES %}
+                <option value="{{ cat }}" {% if c['category']==cat %}selected{% endif %}>{{ cat }}</option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div class="flag-group">
+              <label>
+                <input type="checkbox" name="priority_locked" {% if c['priority_locked'] %}checked{% endif %}>
+                <span>Lock Priority (prevent auto-escalation)</span>
+              </label>
+              <label style="margin-top:8px;">
+                <input type="checkbox" name="is_fake" {% if c['is_fake'] %}checked{% endif %}>
+                <span>Flag as Fake / Spam</span>
+              </label>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block btn-small" style="margin-top:10px;">
+              Save Updates
+            </button>
+          </form>
+
+          {% if c['status'] == 'Solved' and c['citizen_email'] %}
+          <form method="POST" action="{{ url_for('email_completion', complaint_id=c['id']) }}" style="margin-top:14px;">
+            <button type="submit" class="btn btn-small btn-ghost btn-block" {% if c['email_sent'] %}disabled title="Email already delivered to submitter"{% endif %}>
+              {% if c['email_sent'] %}✓ Resolution Email Sent{% else %}✉️ Send Resolution Email to Citizen{% endif %}
+            </button>
+          </form>
+          {% endif %}
+
+          {% if c['status'] == 'Solved' %}
+          <form method="POST" action="{{ url_for('delete_complaint', complaint_id=c['id']) }}" style="margin-top:10px;" onsubmit="return confirm('Permanently delete resolved complaint #{{ '%04d'|format(c['id']) }}? This cannot be undone.');">
+            <input type="hidden" name="next" value="{{ url_for('my_complaints') }}">
+            <button type="submit" class="btn btn-danger btn-block btn-small">
+              🗑️ Delete Solved Complaint
+            </button>
+          </form>
+          {% endif %}
+        </div>
+        {% endif %}
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+var CURRENT_COMPLAINT_ID = {{ c['id'] }};
+
+window.onLiveEvent = function (data) {
+  if (data.id !== CURRENT_COMPLAINT_ID) return;
+
+  if (data.type === 'delete') {
+    window.location.href = "{{ url_for('my_complaints') if session.get('authority_authenticated') else url_for('home') }}";
+    return;
+  }
+  if (data.type === 'update' || data.type === 'upvote') {
+    var el = document.getElementById('live-indicator');
+    if (el) { el.textContent = '\u25CF Updating\u2026'; }
+    setTimeout(function () { window.location.reload(); }, 500);
+  }
+};
+</script>
+{% endblock %}

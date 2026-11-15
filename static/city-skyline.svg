@@ -1,0 +1,174 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 320" fill="none" preserveAspectRatio="xMidYEnd meet">
+  <defs>
+    <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#E0F2FE" stop-opacity="0.8"/>
+      <stop offset="70%" stop-color="#BAE6FD" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#F0FDF4" stop-opacity="0.9"/>
+    </linearGradient>
+    <linearGradient id="bldgGrad1" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#93C5FD"/>
+      <stop offset="100%" stop-color="#3B82F6"/>
+    </linearGradient>
+    <linearGradient id="bldgGrad2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#60A5FA"/>
+      <stop offset="100%" stop-color="#2563EB"/>
+    </linearGradient>
+    <linearGradient id="bldgGrad3" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#BAE6FD"/>
+      <stop offset="100%" stop-color="#60A5FA"/>
+    </linearGradient>
+    <linearGradient id="parkGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#86EFAC"/>
+      <stop offset="100%" stop-color="#22C55E"/>
+    </linearGradient>
+    <linearGradient id="pathGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#FEF08A"/>
+      <stop offset="100%" stop-color="#FDE047"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Sky background -->
+  <rect width="800" height="320" fill="url(#skyGrad)"/>
+
+  <!-- Clouds -->
+  <path d="M120 70C120 62 127 55 135 55C138 48 145 44 153 44C163 44 171 51 172 60C178 60 183 65 183 70C183 76 178 81 172 81H135C127 81 120 76 120 70Z" fill="#FFFFFF" fill-opacity="0.7"/>
+  <path d="M620 90C620 84 625 78 632 78C635 72 641 68 648 68C656 68 663 74 664 81C669 81 673 85 673 90C673 95 669 99 664 99H632C625 99 620 95 620 90Z" fill="#FFFFFF" fill-opacity="0.6"/>
+
+  <!-- Background distant skyscrapers (light silhouette) -->
+  <rect x="180" y="90" width="34" height="150" rx="3" fill="#BFDBFE" fill-opacity="0.5"/>
+  <rect x="230" y="60" width="42" height="180" rx="3" fill="#93C5FD" fill-opacity="0.5"/>
+  <path d="M251 35L251 60" stroke="#93C5FD" stroke-width="2"/>
+  <rect x="310" y="80" width="38" height="160" rx="3" fill="#BAE6FD" fill-opacity="0.6"/>
+  <rect x="470" y="70" width="36" height="170" rx="3" fill="#93C5FD" fill-opacity="0.5"/>
+  <rect x="520" y="100" width="44" height="140" rx="3" fill="#BFDBFE" fill-opacity="0.5"/>
+
+  <!-- Midground modern skyscrapers -->
+  <!-- Left modern tower -->
+  <path d="M140 130L170 115V240H140V130Z" fill="#60A5FA" fill-opacity="0.8"/>
+  <path d="M170 115L195 125V240H170V115Z" fill="#3B82F6" fill-opacity="0.8"/>
+  <!-- Windows pattern -->
+  <line x1="148" y1="140" x2="148" y2="230" stroke="#EFF6FF" stroke-width="2" stroke-dasharray="4 4"/>
+  <line x1="158" y1="140" x2="158" y2="230" stroke="#EFF6FF" stroke-width="2" stroke-dasharray="4 4"/>
+
+  <!-- High-rise 2 -->
+  <rect x="280" y="85" width="45" height="155" rx="2" fill="url(#bldgGrad1)"/>
+  <rect x="290" y="70" width="25" height="20" rx="1" fill="#2563EB"/>
+  <line x1="302" y1="50" x2="302" y2="70" stroke="#1D4ED8" stroke-width="2"/>
+  <!-- Windows -->
+  <g fill="#FFFFFF" fill-opacity="0.6">
+    <rect x="286" y="95" width="6" height="6" rx="1"/>
+    <rect x="296" y="95" width="6" height="6" rx="1"/>
+    <rect x="306" y="95" width="6" height="6" rx="1"/>
+    <rect x="316" y="95" width="6" height="6" rx="1"/>
+    <rect x="286" y="110" width="6" height="6" rx="1"/>
+    <rect x="296" y="110" width="6" height="6" rx="1"/>
+    <rect x="306" y="110" width="6" height="6" rx="1"/>
+    <rect x="316" y="110" width="6" height="6" rx="1"/>
+    <rect x="286" y="125" width="6" height="6" rx="1"/>
+    <rect x="296" y="125" width="6" height="6" rx="1"/>
+    <rect x="306" y="125" width="6" height="6" rx="1"/>
+    <rect x="316" y="125" width="6" height="6" rx="1"/>
+    <rect x="286" y="140" width="6" height="6" rx="1"/>
+    <rect x="296" y="140" width="6" height="6" rx="1"/>
+    <rect x="306" y="140" width="6" height="6" rx="1"/>
+    <rect x="316" y="140" width="6" height="6" rx="1"/>
+    <rect x="286" y="155" width="6" height="6" rx="1"/>
+    <rect x="296" y="155" width="6" height="6" rx="1"/>
+    <rect x="306" y="155" width="6" height="6" rx="1"/>
+    <rect x="316" y="155" width="6" height="6" rx="1"/>
+    <rect x="286" y="170" width="6" height="6" rx="1"/>
+    <rect x="296" y="170" width="6" height="6" rx="1"/>
+    <rect x="306" y="170" width="6" height="6" rx="1"/>
+    <rect x="316" y="170" width="6" height="6" rx="1"/>
+  </g>
+
+  <!-- Iconic Center Skyscraper -->
+  <path d="M360 45L385 20L410 45V240H360V45Z" fill="url(#bldgGrad2)"/>
+  <line x1="385" y1="5" x2="385" y2="20" stroke="#1E40AF" stroke-width="2.5"/>
+  <path d="M385 20L410 45V240H385V20Z" fill="#1D4ED8" fill-opacity="0.4"/>
+  <!-- Windows -->
+  <g fill="#DBEAFE" fill-opacity="0.75">
+    <rect x="368" y="60" width="8" height="8" rx="1"/>
+    <rect x="380" y="60" width="8" height="8" rx="1"/>
+    <rect x="394" y="60" width="8" height="8" rx="1"/>
+    <rect x="368" y="76" width="8" height="8" rx="1"/>
+    <rect x="380" y="76" width="8" height="8" rx="1"/>
+    <rect x="394" y="76" width="8" height="8" rx="1"/>
+    <rect x="368" y="92" width="8" height="8" rx="1"/>
+    <rect x="380" y="92" width="8" height="8" rx="1"/>
+    <rect x="394" y="92" width="8" height="8" rx="1"/>
+    <rect x="368" y="108" width="8" height="8" rx="1"/>
+    <rect x="380" y="108" width="8" height="8" rx="1"/>
+    <rect x="394" y="108" width="8" height="8" rx="1"/>
+    <rect x="368" y="124" width="8" height="8" rx="1"/>
+    <rect x="380" y="124" width="8" height="8" rx="1"/>
+    <rect x="394" y="124" width="8" height="8" rx="1"/>
+    <rect x="368" y="140" width="8" height="8" rx="1"/>
+    <rect x="380" y="140" width="8" height="8" rx="1"/>
+    <rect x="394" y="140" width="8" height="8" rx="1"/>
+    <rect x="368" y="156" width="8" height="8" rx="1"/>
+    <rect x="380" y="156" width="8" height="8" rx="1"/>
+    <rect x="394" y="156" width="8" height="8" rx="1"/>
+  </g>
+
+  <!-- Right side civic hall / courthouse building -->
+  <rect x="425" y="120" width="75" height="120" rx="3" fill="#F8FAFC"/>
+  <polygon points="420,120 462,95 505,120" fill="#E2E8F0"/>
+  <!-- Pillars -->
+  <rect x="432" y="125" width="6" height="60" fill="#CBD5E1"/>
+  <rect x="444" y="125" width="6" height="60" fill="#CBD5E1"/>
+  <rect x="456" y="125" width="6" height="60" fill="#CBD5E1"/>
+  <rect x="468" y="125" width="6" height="60" fill="#CBD5E1"/>
+  <rect x="480" y="125" width="6" height="60" fill="#CBD5E1"/>
+  <rect x="492" y="125" width="6" height="60" fill="#CBD5E1"/>
+  <rect x="425" y="185" width="75" height="55" fill="#E2E8F0"/>
+  <rect x="454" y="195" width="16" height="30" rx="8" fill="#0284C7"/>
+
+  <!-- Right modern high-rises -->
+  <path d="M510 110L550 90V240H510V110Z" fill="url(#bldgGrad1)"/>
+  <rect x="560" y="70" width="50" height="170" rx="2" fill="url(#bldgGrad2)"/>
+  <polygon points="560,70 610,70 585,45" fill="#1E40AF"/>
+  <line x1="585" y1="30" x2="585" y2="45" stroke="#1E40AF" stroke-width="2"/>
+  <rect x="620" y="120" width="40" height="120" rx="2" fill="#93C5FD"/>
+
+  <!-- Rolling park hills in foreground -->
+  <path d="M-10 240Q120 220 280 235T600 225T810 240V320H-10V240Z" fill="#86EFAC"/>
+  <path d="M-10 255Q180 235 380 250T750 240T810 260V320H-10V255Z" fill="#4ADE80"/>
+  <path d="M-10 270Q220 250 480 270T810 265V320H-10V270Z" fill="#22C55E"/>
+
+  <!-- Park Pathway -->
+  <path d="M120 320C180 285 240 280 290 275C340 270 380 272 430 268C480 264 540 275 620 320" stroke="#FEF08A" stroke-width="14" stroke-linecap="round" fill="none" opacity="0.85"/>
+  <path d="M120 320C180 285 240 280 290 275C340 270 380 272 430 268C480 264 540 275 620 320" stroke="#FDE047" stroke-width="8" stroke-linecap="round" fill="none" opacity="0.9"/>
+
+  <!-- Trees in park -->
+  <!-- Left tree group -->
+  <circle cx="80" cy="235" r="28" fill="#15803D"/>
+  <circle cx="65" cy="245" r="22" fill="#16A34A"/>
+  <circle cx="100" cy="242" r="20" fill="#22C55E"/>
+  <rect x="76" y="255" width="8" height="25" rx="2" fill="#78350F"/>
+
+  <!-- Mid-left trees -->
+  <circle cx="210" cy="240" r="18" fill="#16A34A"/>
+  <circle cx="230" cy="244" r="15" fill="#22C55E"/>
+  <rect x="218" y="254" width="5" height="16" rx="1" fill="#78350F"/>
+
+  <!-- Center trees near path -->
+  <circle cx="340" cy="250" r="16" fill="#15803D"/>
+  <circle cx="355" cy="252" r="13" fill="#22C55E"/>
+  <rect x="345" y="260" width="4" height="15" rx="1" fill="#78350F"/>
+
+  <!-- Right trees -->
+  <circle cx="660" cy="235" r="26" fill="#15803D"/>
+  <circle cx="685" cy="242" r="24" fill="#16A34A"/>
+  <circle cx="640" cy="246" r="20" fill="#22C55E"/>
+  <rect x="668" y="255" width="7" height="24" rx="2" fill="#78350F"/>
+
+  <circle cx="740" cy="250" r="22" fill="#16A34A"/>
+  <circle cx="760" cy="254" r="18" fill="#22C55E"/>
+  <rect x="748" y="265" width="5" height="18" rx="1" fill="#78350F"/>
+
+  <!-- Street lamp in park -->
+  <line x1="280" y1="250" x2="280" y2="275" stroke="#334155" stroke-width="2"/>
+  <circle cx="280" cy="248" r="3" fill="#FACC15"/>
+  <circle cx="280" cy="248" r="6" fill="#FEF08A" fill-opacity="0.4"/>
+</svg>

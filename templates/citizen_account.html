@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+{% block title %}Citizen Profile &mdash; Citizen Solution Priority{% endblock %}
+
+{% block content %}
+<section class="block">
+  <div class="wrap profile-shell profile-flow">
+    <header class="profile-page-heading">
+      <h1>Your citizen profile</h1>
+      <p>Manage your citizen identity, reporting area, and complaint progress in one place.</p>
+    </header>
+
+    <section class="profile-card profile-identity-card" aria-labelledby="profile-name">
+      <div class="profile-identity">
+        <div class="profile-avatar-large" aria-hidden="true">{{ user['name'][:1]|upper }}</div>
+        <div class="profile-identity-copy">
+          <div class="profile-badges">
+            <span class="badge profile-verified">Verified Citizen</span>
+            <span class="badge">@{{ user['username'] }}</span>
+          </div>
+          <h2 id="profile-name" data-translation-ignore>{{ user['name'] }}</h2>
+          <p data-translation-ignore>{{ user['email'] }}</p>
+        </div>
+      </div>
+      <details class="profile-disclosure">
+        <summary class="btn btn-small btn-ghost">Edit Profile</summary>
+        <form method="POST" action="{{ url_for('citizen_account') }}" class="profile-form">
+          <input type="hidden" name="action" value="profile">
+          <div class="profile-form-grid">
+            <label class="profile-field">Full name
+              <input type="text" name="name" maxlength="80" value="{{ user['name'] }}" required>
+            </label>
+            <label class="profile-field">Email address
+              <input type="email" name="email" maxlength="254" value="{{ user['email'] }}" required>
+            </label>
+            <label class="profile-field">City
+              <input type="text" name="city" maxlength="100" value="{{ user['city'] }}" placeholder="e.g. Bengaluru">
+            </label>
+            <label class="profile-field">Neighborhood
+              <select name="area">
+                <option value="">Select your area</option>
+                {% for city_name in cities %}
+                <option value="{{ city_name }}" {% if user['area'] == city_name %}selected{% endif %}>{{ city_name }}</option>
+                {% endfor %}
+              </select>
+            </label>
+            <label class="profile-field">Ward
+              <input type="text" name="ward" maxlength="100" value="{{ user['ward'] }}" placeholder="e.g. Ward 173">
+            </label>
+          </div>
+          <p class="profile-note">Your saved area can be used automatically when you report an issue.</p>
+          <button type="submit" class="btn btn-primary btn-small">Save Profile</button>
+        </form>
+      </details>
+    </section>
+
+    <section class="profile-card" aria-labelledby="area-heading">
+      <div class="profile-card-heading">
+        <div class="profile-heading-icon" aria-hidden="true">📍</div>
+        <div>
+          <h2 id="area-heading">My Area / Ward</h2>
+          <p>Save your usual location for quicker complaint reporting and local routing.</p>
+        </div>
+      </div>
+      <div class="profile-area-summary">
+        <span><strong>City</strong><span data-translation-ignore>{{ user['city'] or 'Not set' }}</span></span>
+        <span><strong>Neighborhood</strong><span data-translation-ignore>{{ user['area'] or 'Not set' }}</span></span>
+        <span><strong>Ward</strong><span data-translation-ignore>{{ user['ward'] or 'Not set' }}</span></span>
+      </div>
+      <a class="profile-inline-link" href="{{ url_for('submit') }}">Report an issue <span aria-hidden="true">&rarr;</span></a>
+    </section>
+
+    <section class="profile-card" aria-labelledby="complaint-summary-heading">
+      <div class="profile-card-heading">
+        <div class="profile-heading-icon profile-icon-blue" aria-hidden="true">📋</div>
+        <div>
+          <h2 id="complaint-summary-heading">My Complaints</h2>
+          <p>See where your reports stand and follow their progress.</p>
+        </div>
+        <a class="profile-heading-link" href="{{ url_for('citizen_reports') }}">View all</a>
+      </div>
+      <div class="profile-stats-grid profile-complaint-stats">
+        <a class="profile-stat" href="{{ url_for('citizen_reports') }}">
+          <strong>{{ complaint_summary['total'] }}</strong><span>Total</span>
+        </a>
+        <div class="profile-stat">
+          <strong>{{ complaint_summary['pending'] }}</strong><span>Pending</span>
+        </div>
+        <div class="profile-stat">
+          <strong>{{ complaint_summary['in_progress'] }}</strong><span>In Progress</span>
+        </div>
+        <div class="profile-stat">
+          <strong>{{ complaint_summary['resolved'] }}</strong><span>Resolved</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="profile-card" aria-labelledby="settings-heading">
+      <div class="profile-card-heading">
+        <div class="profile-heading-icon" aria-hidden="true">⚙️</div>
+        <div>
+          <h2 id="settings-heading">Settings</h2>
+          <p>Manage privacy and account security.</p>
+        </div>
+      </div>
+      <details class="profile-security">
+        <summary>Privacy &amp; Security</summary>
+        <p class="profile-note">Your account name and email are used to manage your reports and are not shown on the public complaint list.</p>
+        <form method="POST" action="{{ url_for('citizen_account') }}" class="profile-form">
+          <input type="hidden" name="action" value="password">
+          <div class="profile-form-grid">
+            <label class="profile-field">Current password
+              <input type="password" name="current_password" autocomplete="current-password" required>
+            </label>
+            <label class="profile-field">New password
+              <input type="password" name="new_password" minlength="10" maxlength="128" autocomplete="new-password" required>
+            </label>
+            <label class="profile-field">Confirm new password
+              <input type="password" name="password_confirm" minlength="10" maxlength="128" autocomplete="new-password" required>
+            </label>
+          </div>
+          <button type="submit" class="btn btn-small btn-ghost">Change Password</button>
+        </form>
+      </details>
+    </section>
+
+    <section class="profile-card profile-help-card" aria-labelledby="help-heading">
+      <div class="profile-card-heading">
+        <div class="profile-heading-icon" aria-hidden="true">💬</div>
+        <div>
+          <h2 id="help-heading">Help &amp; Support</h2>
+          <p>Need help with your account or a civic service?</p>
+        </div>
+      </div>
+      <div class="profile-help-links">
+        <a href="tel:08022660000"><strong>Citizen Helpline</strong><span>080-22660000</span></a>
+        <a href="mailto:contact@bbmp.gov.in"><strong>Email Support</strong><span>contact@bbmp.gov.in</span></a>
+      </div>
+    </section>
+
+    <form method="POST" action="{{ url_for('citizen_logout') }}" class="profile-signout">
+      <button type="submit" class="btn btn-danger btn-block">Sign Out of Account</button>
+    </form>
+  </div>
+</section>
+{% endblock %}
